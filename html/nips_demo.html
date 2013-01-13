@@ -6,73 +6,81 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Identifying Dendritic Processing in a [Filter]-[Ideal IAF] neural circuit</title><meta name="generator" content="MATLAB 7.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-07-22"><meta name="DC.source" content="nips_demo.m"><style type="text/css">
+      --><title>Identifying Dendritic Processing in a [Filter]-[Ideal IAF] neural circuit</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2013-01-13"><meta name="DC.source" content="nips_demo.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
-body {
-  background-color: white;
-  margin:10px;
-}
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
 
-h1 {
-  color: #990000; 
-  font-size: x-large;
-}
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
 
-h2 {
-  color: #990000;
-  font-size: medium;
-}
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
 
-/* Make the text shrink to fit narrow windows, but not stretch too far in 
-wide windows. */ 
-p,h1,h2,div.content div {
-  max-width: 600px;
-  /* Hack for IE6 */
-  width: auto !important; width: 600px;
-}
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
 
-pre.codeinput {
-  background: #EEEEEE;
-  padding: 10px;
-}
-@media print {
-  pre.codeinput {word-wrap:break-word; width:100%;}
-} 
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
 
-span.keyword {color: #0000FF}
-span.comment {color: #228B22}
-span.string {color: #A020F0}
-span.untermstring {color: #B20000}
-span.syscmd {color: #B28C00}
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
 
-pre.codeoutput {
-  color: #666666;
-  padding: 10px;
-}
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
 
-pre.error {
-  color: red;
-}
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
 
-p.footer {
-  text-align: right;
-  font-size: xx-small;
-  font-weight: lighter;
-  font-style: italic;
-  color: gray;
-}
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
 
-  </style></head><body><div class="content"><h1>Identifying Dendritic Processing in a [Filter]-[Ideal IAF] neural circuit</h1><!--introduction--><p>This demo illustrates identification of the [Filter] in the [Filter]-[Ideal IAF] circuit using bandlimited input signals, i.e., signals that belong to the Paley-Wiener space.</p><p>The code below corresponds to Corollary 3 in [1] and was used to generate Figs. 4-6 in [1]. The employed filter was taken from [2].</p><p>[1] A.A. Lazar and Y.B. Slutskiy, Identifying Dendritic Processing, Advances in Neural Information Processing Systems 23, pp. 1261-1269, 2010</p><p>[2] E.H. Adelson and J R. Bergen, Spatiotemporal energy models for the perception of motion, Journal of the Optical Society of America, Vol 2(2),1985</p><p>Author:               Yevgeniy B. Slutskiy</p><p>Revision Author:      Chung-Heng Yeh</p><p>Copyright 2010-2012   Yevgeniy B. Slutskiy and Chung-Heng Yeh</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Initialize the demo</a></li><li><a href="#2">Create a bandlimited stimulus. The bandwidth W = 2\pi*25 rad/s</a></li><li><a href="#4">Specify the filter h to be used</a></li><li><a href="#6">Compute the filter projection Ph</a></li><li><a href="#8">Filter the input signal u</a></li><li><a href="#10">Encode the filter output v=u*h with an IAF neuron</a></li><li><a href="#12">Identify the filter projection Ph</a></li><li><a href="#13">Generate Fig. 4 of [1]</a></li><li><a href="#14">Generate Fig. 5 of [1]</a></li><li><a href="#22">Generate Fig. 6 of [1]</a></li></ul></div><h2>Initialize the demo<a name="1"></a></h2><pre class="codeinput">clc; clear <span class="string">all</span>; close <span class="string">all</span>;                  <span class="comment">% Reset the Matlab workspace.</span>
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>Identifying Dendritic Processing in a [Filter]-[Ideal IAF] neural circuit</h1><!--introduction--><p>This demo illustrates identification of the [Filter] in the [Filter]-[Ideal IAF] circuit using band-limited input signals, i.e., signals that belong to the Paley-Wiener space.</p><p>The code below corresponds to Corollary 3 in [1] and was used to generate Figs. 4-6 in [1]. The employed filter was taken from [2].</p><p>Author:               Yevgeniy B. Slutskiy <a href="ys2146@columbia.edu">ys2146@columbia.edu</a></p><p>Revision Author:      Chung-Heng Yeh <a href="chyeh@ee.columbia.edu">chyeh@ee.columbia.edu</a></p><p>Bionet Group, Columbia University</p><p>Copyright 2010-2012   Yevgeniy B. Slutskiy and Chung-Heng Yeh</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Initialize the demo</a></li><li><a href="#2">Specify the filter h to be used</a></li><li><a href="#4">Create a band-limited stimulus. The bandwidth W = 2\pi*25 rad/s</a></li><li><a href="#6">Compute the filter projection Ph</a></li><li><a href="#8">Filter the input signal u</a></li><li><a href="#10">Encode the filter output v=u*h with an IAF neuron</a></li><li><a href="#12">Identify the filter projection Ph</a></li><li><a href="#13">Generate Fig. 4 of [1]</a></li><li><a href="#14">Generate Fig. 5 of [1]</a></li><li><a href="#21">Generate Fig. 6 of [1]</a></li><li><a href="#29">Reference</a></li></ul></div><h2>Initialize the demo<a name="1"></a></h2><pre class="codeinput">clc; clear <span class="string">all</span>; close <span class="string">all</span>;                  <span class="comment">% reset the Matlab workspace</span>
+set(0,<span class="string">'defaulttextinterpreter'</span>,<span class="string">'latex'</span>);    <span class="comment">% set default text interpreter to latex</span>
 
 tic_demo = tic;                             <span class="comment">% start the demo timer</span>
 tic_init = tic;                             <span class="comment">% start the initialization timer</span>
-
 dt = 5e-6;                                  <span class="comment">% set the time step, [s]</span>
-f = 25;                                     <span class="comment">% set the input signal bandwidth, [Hz]</span>
-W = 2*pi*f;                                 <span class="comment">% calculate the bandwidth in [rad]</span>
+
+<span class="comment">% define function handle for displaying running time</span>
+runtime = @(msg,time) display([msg num2str(floor(time/60)) <span class="string">''' '</span> <span class="keyword">...</span>
+                      num2str(time - 60*floor(time/60), <span class="string">'%3.1f'</span>) <span class="string">'"'</span>]);
+</pre><h2>Specify the filter h to be used<a name="2"></a></h2><p>Generate a filter h according to Adelson and Bergen in [2]. h has a temporal support on the interval [T_1, T_2]. The filter generated here will be repeatedly used through this demo.</p><pre class="codeinput">T_1 = 0; T_2 = 0.1;                         <span class="comment">% specify T_1 and T_2</span>
+t_filt = T_1:dt:T_2;                        <span class="comment">% set the length of the impulse response, [s]</span>
+a = 200;                                    <span class="comment">% set the filter parameter</span>
+h = 3*a*exp(-a*t_filt).*((a*t_filt).^3/<span class="keyword">...</span>
+    factorial(3)-(a*t_filt).^5/factorial(5));
+</pre><p>Plot the filter</p><pre class="codeinput">figure(<span class="string">'Name'</span>,<span class="string">'Filter'</span>,<span class="string">'Position'</span>,[0 0 600 300],<span class="string">'color'</span>,<span class="string">'white'</span>);
+plot(t_filt, h);
+set(gca,<span class="string">'xlim'</span>,[0 0.1],<span class="string">'ylim'</span>,[-50 100],<span class="keyword">...</span>
+    <span class="string">'xlabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Time, [s]'</span>),<span class="string">'ylabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Amplitude'</span>),<span class="keyword">...</span>
+    <span class="string">'title'</span>,text(<span class="string">'string'</span>,<span class="string">'Impulse response $h(t)$ of the filter'</span>));
+</pre><img vspace="5" hspace="5" src="nips_demo_01.png" alt=""> <h2>Create a band-limited stimulus. The bandwidth W = 2\pi*25 rad/s<a name="4"></a></h2><pre class="codeinput">f  = 25;                                    <span class="comment">% set the input signal bandwidth, [Hz]</span>
+W  = 2*pi*f;                                <span class="comment">% calculate the bandwidth in [rad]</span>
 Ts = pi/W;                                  <span class="comment">% calculate the sampling period in [s]</span>
-t = 0:dt:1.12;                              <span class="comment">% create a time vector for the input stimulus</span>
-</pre><h2>Create a bandlimited stimulus. The bandwidth W = 2\pi*25 rad/s<a name="2"></a></h2><pre class="codeinput">randn(<span class="string">'state'</span>, 19871127);                   <span class="comment">% fix the state of randn() for reproducible results</span>
+t  = 0:dt:1.12;                             <span class="comment">% create a time vector for the input stimulus</span>
+
+rng(19871127,<span class="string">'v5uniform'</span>);                  <span class="comment">% set the state of random number generator</span>
 u = zeros(1,length(t));                     <span class="comment">% initialize the stimulus u(t)</span>
 N_samp = floor((t(end)-t(1))/Ts);           <span class="comment">% find the number of stimulus samples</span>
 ukT = randn(1,N_samp);                      <span class="comment">% use randomly generated signal samples (e.g., from a Gaussian distribution)</span>
@@ -82,172 +90,147 @@ ukT = randn(1,N_samp);                      <span class="comment">% use randomly
 <span class="keyword">end</span>
 u = u/max(abs(u));                          <span class="comment">% normalize the input signal</span>
 </pre><p>Plot the stimulus</p><pre class="codeinput">figure(<span class="string">'Name'</span>,<span class="string">'Input stimulus'</span>,<span class="string">'Position'</span>,[0 0 600 300],<span class="string">'color'</span>,<span class="string">'white'</span>);
-plot(t, u); title(<span class="string">'Input stimulus $u(t)$'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-axis([0 1 -1 1]); xlabel(<span class="string">'Time, [s]'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-ylabel(<span class="string">'Amplitude'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-</pre><img vspace="5" hspace="5" src="nips_demo_01.png" alt=""> <h2>Specify the filter h to be used<a name="4"></a></h2><p>Generate a filter according to Adelson and Bergen in [2]. h has a temporal support on the interval [T_1, T_2]</p><pre class="codeinput">T_1 = 0; T_2 = 0.1;                         <span class="comment">% specify T_1 and T_2</span>
-t_filt = T_1:dt:T_2;                        <span class="comment">% set the length of the impulse reponse, [s]</span>
-a = 200;                                    <span class="comment">% set the filter parameter</span>
-h = 3*a*exp(-a*t_filt).*((a*t_filt).^3/factorial(3)<span class="keyword">...</span>
-    -(a*t_filt).^5/factorial(5));
-</pre><p>Plot the filter</p><pre class="codeinput">figure(<span class="string">'Name'</span>,<span class="string">'Filter'</span>,<span class="string">'Position'</span>,[0 0 600 300],<span class="string">'color'</span>,<span class="string">'white'</span>);
-plot(t_filt, h); axis([0 0.1 -50 100]);
-xlabel(<span class="string">'Time, [s]'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-ylabel(<span class="string">'Amplitude'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-title(<span class="string">'Impulse response $h(t)$ of the filter'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
+plot(t, u);
+set(gca,<span class="string">'xlim'</span>,[0 1],<span class="string">'ylim'</span>,[-1 1],<span class="keyword">...</span>
+    <span class="string">'xlabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Time, [s]'</span>),<span class="string">'ylabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Amplitude'</span>),<span class="keyword">...</span>
+    <span class="string">'title'</span>,text(<span class="string">'string'</span>,<span class="string">'Input stimulus $u(t)$'</span>));
 </pre><img vspace="5" hspace="5" src="nips_demo_02.png" alt=""> <h2>Compute the filter projection Ph<a name="6"></a></h2><p>Ph is the projection of h onto the input signal space. It is the best approximation of h that can be recovered.</p><pre class="codeinput">t_Ph = t - (t(1)+t(end))/2;                 <span class="comment">% get the time vector for Ph</span>
 g = W/pi*sinc(W*t_Ph/pi);                   <span class="comment">% calculate the sinc kernel g</span>
 Ph = dt*fftfilt(h,g);                       <span class="comment">% find the projection Ph by convolving h with g</span>
-</pre><p>Plot the filter projection</p><pre class="codeinput">idx = find( t_Ph &gt; -0.05 &amp;  t_Ph &lt; 0.15 );
-figure(<span class="string">'Name'</span>,<span class="string">'Filter projection'</span>,<span class="string">'Position'</span>,[0 0 600 300],<span class="string">'color'</span>,<span class="string">'white'</span>);
-plot(t_Ph(idx), Ph(idx));
-<span class="comment">%axis([-0.05 0.15 -50 100]);</span>
-axis([0 0.1 -50 100]); xlabel(<span class="string">'Time, [s]'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-ylabel(<span class="string">'Amplitude'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-title(<span class="string">'Filter projection $\mathcal{P}h(t)$'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-</pre><img vspace="5" hspace="5" src="nips_demo_03.png" alt=""> <h2>Filter the input signal u<a name="8"></a></h2><p>Since all signals are finite, the filter output v=u*h is not calculated propertly on the boundaries. v_proper is that part of v, for which the convolution of u and h is computed correctly.</p><pre class="codeinput">v = dt*fftfilt(h,u);                        <span class="comment">% convolve u with h</span>
+idx = find( abs(t_Ph+0.05) &lt; dt/2 ):<span class="keyword">...</span>
+      find( abs(t_Ph-0.15) &lt; dt/2 );        <span class="comment">% need Ph only between [-0.05,0.15]</span>
+t_Ph = t_Ph(idx);                           <span class="comment">% truncate t_Ph</span>
+Ph = Ph(idx);                               <span class="comment">% truncate Ph</span>
+h_long = zeros(size(t_Ph));                 <span class="comment">% set zero-padded version of h</span>
+h_long( find(abs(t_Ph-t_filt(1))&lt;dt/2):<span class="keyword">...</span>
+        find(abs(t_Ph-t_filt(end))&lt;dt/2)  ) = h;
+</pre><pre class="codeinput">figure(<span class="string">'Name'</span>,<span class="string">'Filter projection'</span>,<span class="string">'Position'</span>,[0 0 600 300],<span class="string">'color'</span>,<span class="string">'white'</span>);
+plot(t_Ph,h_long,<span class="string">'--k'</span>,t_Ph, Ph,<span class="string">'b'</span>);
+set(gca,<span class="string">'xlim'</span>,[0 0.1],<span class="string">'ylim'</span>,[-50 100],<span class="keyword">...</span>
+    <span class="string">'xlabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Time, [s]'</span>),<span class="string">'ylabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Amplitude'</span>),<span class="keyword">...</span>
+    <span class="string">'title'</span>,text(<span class="string">'string'</span>,<span class="string">'Filter $h(t)$ and Filter projection $\mathcal{P}h(t)$'</span>));
+legend( <span class="string">'$h(t)$'</span>, <span class="string">'$\mathcal{P}h(t)$'</span> );
+</pre><img vspace="5" hspace="5" src="nips_demo_03.png" alt=""> <h2>Filter the input signal u<a name="8"></a></h2><p>Since all signals are finite, the filter output v=u*h is not calculated properly on the boundaries. v_proper is that part of v, for which the convolution of u and h is computed correctly.</p><pre class="codeinput">v = dt*fftfilt(h,u);                        <span class="comment">% convolve u with h</span>
 
 v_proper = v(length(h):end);                <span class="comment">% get the proper part of v</span>
-t_proper = t(length(h):end);                <span class="comment">% get the correspoding time vector</span>
+t_proper = t(length(h):end);                <span class="comment">% get the corresponding time vector</span>
 u_proper = u(length(h):end);                <span class="comment">% get the corresponding stimulus</span>
 </pre><p>Plot the filter output</p><pre class="codeinput">figure(<span class="string">'Name'</span>,<span class="string">'Filter output v'</span>,<span class="string">'Position'</span>,[0 0 600 300],<span class="string">'color'</span>,<span class="string">'white'</span>);
-plot(t,v); axis([0 1 -1.2 1.2]); xlabel(<span class="string">'Time, [s]'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-ylabel(<span class="string">'Amplitude'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-title(<span class="string">'Filter output $v(t)$'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
+plot(t,v);
+set(gca,<span class="string">'xlim'</span>,[0 1],<span class="string">'ylim'</span>,[-1.2 1.2],<span class="string">'xlabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Time, [s]'</span>),<span class="keyword">...</span>
+    <span class="string">'ylabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Amplitude'</span>),<span class="string">'title'</span>,text(<span class="string">'string'</span>,<span class="string">'Filter output $v(t)$'</span>));
 </pre><img vspace="5" hspace="5" src="nips_demo_04.png" alt=""> <h2>Encode the filter output v=u*h with an IAF neuron<a name="10"></a></h2><p>Specify parameters of the Ideal IAF neuron</p><pre class="codeinput">delta = 0.007;                              <span class="comment">% set the threshold</span>
 bias  = 0.28;                               <span class="comment">% set the bias</span>
-kappa = 1;                                  <span class="comment">% set capacitance</span>
+kappa = 1;                                  <span class="comment">% set the capacitance</span>
 
 [spk_train vol_trace] = ideal_iaf_encode(v_proper,t_proper,bias,delta,kappa);
 
-timer = toc(tic_init);                     	<span class="comment">% get the initialization time</span>
-display([<span class="string">'Initialization time: '</span> num2str(floor(timer/60)) <span class="string">''' '</span> num2str(timer - 60*floor(timer/60), <span class="string">'%3.1f'</span>) <span class="string">'"'</span>]);
-</pre><pre class="codeoutput">Initialization time: 0' 2.1"
+timer = toc(tic_init);                      <span class="comment">% get the initialization time</span>
+runtime(<span class="string">'Initialization time: '</span>,timer);     <span class="comment">% display the initialization time</span>
+</pre><pre class="codeoutput">Initialization time: 0' 3.3"
 </pre><p>Plot the voltage trace and the associated spike train</p><pre class="codeinput">figure(<span class="string">'Name'</span>,<span class="string">'Neural circuit output'</span>,<span class="string">'Position'</span>,[0 0 600 300],<span class="string">'color'</span>,<span class="string">'white'</span>);
-subplot(7,1,1:5);
-    plot([0 t_proper(end)-t_proper(1)], [delta delta], <span class="string">'--r'</span>); hold <span class="string">on</span>;
-    plot(t_proper-t_proper(1),vol_trace,<span class="string">'b-'</span>);
-    plot(spk_train-t_proper(1), delta*ones(size(spk_train)), <span class="string">'r.'</span>);
-    h_legend = legend([<span class="string">'Threshold $\delta='</span> num2str(delta) <span class="string">'$'</span>], <span class="string">'Membrane voltage $v\quad$'</span>, <span class="string">'$v(t)=\delta$'</span>, <span class="string">'location'</span>,<span class="string">'East'</span>);
-    set(h_legend, <span class="string">'interpreter'</span>,<span class="string">'latex'</span>); axis([0 1 min(vol_trace) delta*1.1]);
-    set(gca,<span class="string">'xticklabel'</span>,[]); ylabel(<span class="string">'Amplitude'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-    title(<span class="string">'Output of the [Filter]-[Ideal IAF] neural circuit'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-subplot(7,1,6:7);
-    stem(spk_train-t_proper(1),	ones(size(spk_train)), <span class="string">'^k'</span>, <span class="string">'filled'</span>);
-    set(gca,<span class="string">'yticklabel'</span>,[]); set(gca,<span class="string">'ytick'</span>,[]); axis([0 1 0 1.1]);
-    xlabel(<span class="string">'Time, [s]'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-    h_legend = legend(<span class="string">'$(t_k)_{k\in Z}$'</span>, <span class="string">'location'</span>,<span class="string">'East'</span>);
-    set(h_legend, <span class="string">'interpreter'</span>,<span class="string">'latex'</span>);
-</pre><img vspace="5" hspace="5" src="nips_demo_05.png" alt=""> <h2>Identify the filter projection Ph<a name="12"></a></h2><p>Since the temporal support of the filter h is not known, we identify the projection Ph in a window W = [tau_1, tau_2]. Temporal windows W^i of spikes can be chose arbitrarily. Here we pick W^i so that the Nyquist-type condition on the density of spikes is achieved quickly (see also Theorem 1 and Remark 1 in [1]).</p><pre class="codeinput">T_filt_rec = 0.12;                          <span class="comment">% specify the hypothesized length of the implulse response</span>
+    set(subplot(7,1,1:5),<span class="string">'xlim'</span>,[0 1],<span class="string">'ylim'</span>,[min(vol_trace) delta*1.1],<span class="string">'box'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
+        <span class="string">'xticklabel'</span>,[],<span class="string">'ylabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Amplitude'</span>),<span class="keyword">...</span>
+        <span class="string">'title'</span>,text(<span class="string">'string'</span>,<span class="string">'Output of the [Filter]-[Ideal IAF] neural circuit'</span>));
+        hold <span class="string">on</span>;
+        plot([0 t_proper(end)-t_proper(1)], [delta delta], <span class="string">'--r'</span>,<span class="keyword">...</span>
+              t_proper-t_proper(1),vol_trace,<span class="string">'b-'</span>,<span class="keyword">...</span>
+              spk_train-t_proper(1), delta*ones(size(spk_train)),<span class="string">'ro'</span>,<span class="string">'MarkerfaceColor'</span>,<span class="string">'r'</span>);
+        legend([<span class="string">'Threshold $\delta='</span> num2str(delta) <span class="string">'$'</span>],<span class="keyword">...</span>
+                <span class="string">'Membrane voltage $v\qquad$'</span>, <span class="string">'$v(t)=\delta$'</span>, <span class="string">'location'</span>,<span class="string">'East'</span>);
+    set(subplot(7,1,6:7),<span class="string">'xlim'</span>,[0 1],<span class="string">'ylim'</span>,[0 1.1],<span class="string">'box'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
+        <span class="string">'yticklabel'</span>,[],<span class="string">'ytick'</span>,[],<span class="string">'xlabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Time, [s]'</span>));
+        hold <span class="string">on</span>;
+        stem(spk_train-t_proper(1), ones(size(spk_train)), <span class="string">'^k'</span>, <span class="string">'filled'</span>);
+        legend(<span class="string">'$(t_k)_{k\in Z}$'</span>, <span class="string">'location'</span>,<span class="string">'East'</span>);
+</pre><img vspace="5" hspace="5" src="nips_demo_05.png" alt=""> <h2>Identify the filter projection Ph<a name="12"></a></h2><p>Since the temporal support of the filter h is not known, we identify the projection Ph in a window W = [tau_1, tau_2]. Temporal windows W^i of spikes can be chosen arbitrarily. Here we pick W^i so that the Nyquist-type condition on the density of spikes is achieved quickly (see also Theorem 1 and Remark 1 in [1]).</p><pre class="codeinput">T_filt_rec = 0.12;                          <span class="comment">% specify the hypothesized length of the implulse response</span>
 tau_1 = -(T_filt_rec - t_filt(end))/2;      <span class="comment">% get tau_1 and tau_2. Here W is centered around the actual</span>
 tau_2 = t_filt(end)-tau_1;                  <span class="comment">% temporal support T_2-T_1</span>
-N_max = 10;                                 <span class="comment">% set the maximum number of windows to be used (could be smaller depending on the simulation)</span>
-
+N_max = 10;                                 <span class="comment">% set the maximum number of windows to be used</span>
+                                            <span class="comment">% (could be smaller depending on the simulation)</span>
 tic_CIM = tic;                              <span class="comment">% start the algorithm timer</span>
-[h_hat windows] = identify_h_ideal_iaf(dt, t_Ph, t_proper, u_proper, W, bias, delta, kappa,<span class="keyword">...</span>
+[h_hat windows] = identify_h_ideal_iaf(dt, t_Ph, t_proper, u_proper, W,<span class="keyword">...</span>
+                                       bias, delta, kappa,<span class="keyword">...</span>
                                        spk_train, tau_1, tau_2, N_max);
 
 timer = toc(tic_CIM);                       <span class="comment">% stop the algorithm timer</span>
-display([<span class="string">'CIM running time: '</span> num2str(floor(timer/60)) <span class="string">''' '</span> num2str(timer - 60*floor(timer/60), <span class="string">'%3.1f'</span>) <span class="string">'"'</span>]);
-</pre><pre class="codeoutput">CIM running time: 0' 0.4"
+runtime(<span class="string">'CIM running time: '</span>,timer);        <span class="comment">% display execution time</span>
+</pre><pre class="codeoutput">CIM running time: 0' 0.1"
 </pre><h2>Generate Fig. 4 of [1]<a name="13"></a></h2><pre class="codeinput">figure(<span class="string">'Name'</span>,<span class="string">'NIPS 2010 Fig. 4'</span>,<span class="string">'Position'</span>,[0 0 1440 1080],<span class="string">'color'</span>,<span class="string">'white'</span>)
-
     <span class="comment">% plot the input stimulus u</span>
-    subplot(321);
-        plot(t_proper - t_proper(1), u_proper);
-        title(<span class="string">'$(a)\qquad$Input signal u(t)'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-        h_legend = legend([<span class="string">'$\Omega = 2\pi\cdot$'</span> num2str(f) <span class="string">'rad/s$\qquad$'</span>]); set(h_legend,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-        axis([0 1 -1 1]); ylabel(<span class="string">'Amplitude'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>);
-
+    set(subplot(3,2,1),<span class="string">'xlim'</span>,[0 1],<span class="string">'ylim'</span>,[-1 1],<span class="string">'box'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
+        <span class="string">'ylabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Amplitude'</span>),<span class="keyword">...</span>
+        <span class="string">'title'</span>,text(<span class="string">'string'</span>,<span class="string">'$(a)\qquad$Input signal u(t)'</span>));
+        hold <span class="string">on</span>;plot(t_proper - t_proper(1), u_proper);
+        legend([<span class="string">'$\Omega = 2\pi\cdot$'</span> num2str(f) <span class="string">'rad/s$\qquad$'</span>]);
     <span class="comment">% plot the spike train tk of the IAF neuron and windows W^i</span>
-    subplot(323);
-        N = length(windows);
-        D = bias*kappa/delta;
-        stem(spk_train(1)-t_proper(1), 1.1, <span class="string">'^k'</span>, <span class="string">'filled'</span>);
-        base_palette = <span class="string">'crgbym'</span>;
-        palette = zeros(1,N);
-        <span class="keyword">for</span> j=1:N
-            palette(j) = char( base_palette( mod(j,6) + 1 ) );
-            x = [windows{j}(1) windows{j}(end) windows{j}(end) windows{j}(1)] - t_filt(end);
-            y = [1e-2 1e-2 1.2-1e-2 1.2-1e-2]; patch(x,y,base_palette(mod(j,6)+1),<span class="string">'facealpha'</span>,1,<span class="string">'line'</span>,<span class="string">'none'</span>); hold <span class="string">on</span>;
+    set(subplot(323),<span class="string">'xlim'</span>,[0 1],<span class="string">'ylim'</span>,[0 1.2],<span class="string">'box'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
+        <span class="string">'yticklabel'</span>,[],<span class="string">'ytick'</span>,[],<span class="keyword">...</span>
+        <span class="string">'title'</span>,text(<span class="string">'string'</span>,<span class="string">'$(b)\qquad$Output of the [Filter]-[Ideal IAF] neural circuit'</span>));
+        N = numel(windows);        <span class="comment">% get the number of windows</span>
+        D = bias*kappa/delta;      <span class="comment">% compute the Nyquist rate</span>
+        cs = colormap(hsv(N+1));   <span class="comment">% set the color map</span>
+        hold <span class="string">on</span>;stem(spk_train-t_proper(1), 1.1*ones(size(spk_train)), <span class="string">'^k'</span>, <span class="string">'filled'</span>);
+        <span class="keyword">for</span> i=1:N
+            x = [windows{i}(1) windows{i}(end) windows{i}(end) windows{i}(1)] - t_filt(end);
+            y = [1e-2 1e-2 1.2-1e-2 1.2-1e-2];
+            patch(x,y,cs(i,:),<span class="string">'facealpha'</span>,1,<span class="string">'line'</span>,<span class="string">'none'</span>);hold <span class="string">on</span>;
         <span class="keyword">end</span>
         stem(spk_train-t_proper(1), 1.1*ones(size(spk_train)), <span class="string">'^k'</span>, <span class="string">'filled'</span>);
-        hold <span class="string">on</span>; box <span class="string">on</span>; set(gca,<span class="string">'yticklabel'</span>,[]); set(gca,<span class="string">'ytick'</span>,[]);
-        title(<span class="string">'$(b)\qquad$Output of the [Filter]-[Ideal IAF] neural circuit'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-        h_legend = legend([<span class="string">'$D = '</span> num2str(D,<span class="string">'%3.0f'</span>) <span class="string">'\;$Hz'</span>],[<span class="string">'Windows $\{W^i\}_{i=1}^{'</span> num2str(N) <span class="string">'}\quad$'</span>],<span class="string">'Location'</span>,<span class="string">'East'</span>);
-        set(h_legend,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-        axis([0 1 0 1.2]);
-
+        legend([<span class="string">'$D = '</span> num2str(D,<span class="string">'%3.0f'</span>) <span class="string">'\;$Hz'</span>],<span class="keyword">...</span>
+               [<span class="string">'Windows $\{W^i\}_{i=1}^{'</span> num2str(N) <span class="string">'}\quad$'</span>],<span class="string">'Location'</span>,<span class="string">'East'</span>);
     <span class="comment">% plot h, Ph and h_hat (the filter identified by the algorithm)</span>
-    subplot(325);
-
-        <span class="comment">% h_long is a zero-padded version of h (of the same size as t_Ph)</span>
-        h_long = zeros(size(t_Ph));
-        h_long( find(abs(t_Ph-t_filt(1))&lt;dt/2): find(abs(t_Ph-t_filt(end))&lt;dt/2)  ) = h;
-
-        t_frame_start = tau_1; t_frame_end = tau_2;                 <span class="comment">% specify the temporal window on which to compute the MSE</span>
-        t_frame_i = (t_Ph&gt;=t_frame_start) &amp; (t_Ph&lt;=t_frame_end);    <span class="comment">% find indices of t for the given frame t</span>
-
+    set(subplot(325),<span class="string">'xlim'</span>,[-0.05 0.15],<span class="string">'ylim'</span>,[-50 100],<span class="string">'box'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
+        <span class="string">'xlabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Time, [s]'</span>),<span class="string">'ylabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Amplitude'</span>),<span class="keyword">...</span>
+        <span class="string">'title'</span>,text(<span class="string">'string'</span>,<span class="string">'$(c)\qquad$Original filter vs. the identified filter'</span>));
+        <span class="comment">% find indices of t for the given temporal window on which to compute the MSE</span>
+        idx = (t_Ph&gt;=tau_1) &amp; (t_Ph&lt;=tau_2);
         <span class="comment">% Normalized RMSE between h and h_hat</span>
-        h_hhat_err   = abs(h_long-h_hat)/max(abs(h_long));          <span class="comment">% compute the absolute error</span>
-        h_hhat_RMSE  = sqrt(dt*trapz(h_hhat_err(t_frame_i).^2)/ <span class="keyword">...</span><span class="comment"> % compute the RMSE</span>
-                       (length(t_frame_i)*dt));
-
+        h_hhat_err   = abs(h_long-h_hat)/max(abs(h_long));                <span class="comment">% compute the absolute error</span>
+        h_hhat_RMSE  = sqrt(dt*trapz(h_hhat_err(idx).^2)/(tau_2-tau_1));  <span class="comment">% compute the RMSE</span>
         <span class="comment">% Normalized RMSE between Ph  and h_hat</span>
-        Ph_hhat_err  = abs(Ph-h_hat)/max(abs(Ph));                  <span class="comment">% compute the absolute error</span>
-        Ph_hhat_RMSE = sqrt(dt*trapz(Ph_hhat_err(t_frame_i).^2)/ <span class="keyword">...</span><span class="comment">% compute the RMSE</span>
-                       (length(t_frame_i)*dt));
-
-        plot(t_Ph, h_long,<span class="string">'--k'</span>,t_Ph, Ph,<span class="string">'-b'</span>,t_Ph,h_hat,<span class="string">'-r'</span>);
-        h_title = title(<span class="string">'$(c)\qquad$Original filter vs. the identified filter'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-        h_legend = legend([<span class="string">'$h,\,$RMSE$(\hat{h},h)$ ='</span> num2str(h_hhat_RMSE, <span class="string">'%3.2e'</span>) <span class="string">'$\quad$'</span>],<span class="keyword">...</span>
-                   [<span class="string">'$\mathcal{P}h,\,$RMSE$(\hat{h},\mathcal{P}h)$ ='</span> num2str(Ph_hhat_RMSE, <span class="string">'%3.2e'</span>) <span class="string">'$\qquad$'</span>],<span class="keyword">...</span>
-                   <span class="string">'$\hat{h}$'</span>,<span class="string">'Location'</span>,<span class="string">'NorthEast'</span>);
-        set(h_legend,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-        axis([-0.05 0.15 -50 100]);
-        ylabel(<span class="string">'Amplitude'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>); xlabel(<span class="string">'Time, [s]'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>);
-
-
+        Ph_hhat_err  = abs(Ph-h_hat)/max(abs(Ph));                        <span class="comment">% compute the absolute error</span>
+        Ph_hhat_RMSE = sqrt(dt*trapz(Ph_hhat_err(idx).^2)/(tau_2-tau_1)); <span class="comment">% compute the RMSE;</span>
+        hold <span class="string">on</span>;plot(t_Ph, h_long,<span class="string">'--k'</span>,t_Ph, Ph,<span class="string">'-b'</span>,t_Ph,h_hat,<span class="string">'-r'</span>);
+        legend([<span class="string">'$h,\,$RMSE$(\hat{h},h)$ ='</span> num2str(h_hhat_RMSE, <span class="string">'%3.2e'</span>) <span class="string">'$\quad$'</span>],<span class="keyword">...</span>
+               [<span class="string">'$\mathcal{P}h,\,$RMSE$(\hat{h},\mathcal{P}h)$ ='</span>, num2str(Ph_hhat_RMSE, <span class="string">'%3.2e'</span>) <span class="string">'$\qquad$'</span>],<span class="keyword">...</span>
+               <span class="string">'$\hat{h}$'</span>,<span class="string">'Location'</span>,<span class="string">'NorthEast'</span>);
     <span class="comment">% plot the periodogram power spectrum estmate of u</span>
-    subplot(322);
-       	Fs = 1/dt;                                          <span class="comment">% get the sampling frequency</span>
-        h_spctr = spectrum.periodogram(<span class="string">'hamming'</span>);          <span class="comment">% use a spectral estimator with a hamming window</span>
-
-        hopts = msspectrumopts(h_spctr,u_proper); set(hopts,<span class="string">'Fs'</span>,Fs,<span class="string">'SpectrumType'</span>,<span class="string">'onesided'</span>,<span class="string">'centerdc'</span>,true);
+    set(subplot(3,2,2),<span class="string">'xlim'</span>,[-150 150],<span class="string">'ylim'</span>,[-100 0],<span class="string">'box'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
+        <span class="string">'ylabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Power, [dB]'</span>),<span class="keyword">...</span>
+        <span class="string">'title'</span>,text(<span class="string">'string'</span>,<span class="string">'$(d)\qquad$Periodogram Power Spectrum Estimate of u(t)'</span>));
+        h_spctr = spectrum.periodogram(<span class="string">'hamming'</span>);
+        hopts = msspectrumopts(h_spctr,u_proper);
+        set(hopts,<span class="string">'Fs'</span>,1/dt,<span class="string">'SpectrumType'</span>,<span class="string">'onesided'</span>,<span class="string">'centerdc'</span>,true);
         Hmss = msspectrum(h_spctr,u_proper,hopts);
-        plot(Hmss.frequencies,10*log10(Hmss.data)); axis([-150 150 -100 0]); grid <span class="string">on</span>;
-        h_title = title(<span class="string">''</span>); set(h_title,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>); title(<span class="string">'$(d)\qquad$Periodogram Power Spectrum Estimate of u(t)'</span>);
-        ylabel(<span class="string">'Power, [dB]'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>);
-        h_legend = legend(<span class="string">'supp$(\mathcal{F}u)=[-\Omega,\Omega]\qquad$'</span>);
-        set(h_legend,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-
-  	<span class="comment">% plot the periodogram power spectrum estmate of h</span>
-    subplot(324);
+        hold <span class="string">on</span>;plot(Hmss.frequencies,10*log10(Hmss.data));grid <span class="string">on</span>;
+        legend(<span class="string">'supp$(\mathcal{F}u)=[-\Omega,\Omega]\qquad$'</span>);
+    <span class="comment">% plot the periodogram power spectrum estmate of h</span>
+    set(subplot(3,2,4),<span class="string">'xlim'</span>,[-150 150],<span class="string">'ylim'</span>,[-100 0],<span class="string">'box'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
+        <span class="string">'ylabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Power, [dB]'</span>),<span class="keyword">...</span>
+        <span class="string">'title'</span>,text(<span class="string">'string'</span>,<span class="string">'$(e)\qquad$Periodogram Power Spectrum Estimate of h(t)'</span>));
         h_temp = zeros(size(t_proper));
         h_temp(1:length(h)) = h;
-        hopts = msspectrumopts(h_spctr,h_temp); set(hopts,<span class="string">'Fs'</span>,Fs,<span class="string">'SpectrumType'</span>,<span class="string">'onesided'</span>,<span class="string">'centerdc'</span>,true);
+        hopts = msspectrumopts(h_spctr,h_temp);
+        set(hopts,<span class="string">'Fs'</span>,1/dt,<span class="string">'SpectrumType'</span>,<span class="string">'onesided'</span>,<span class="string">'centerdc'</span>,true);
         Hmss = msspectrum(h_spctr,h_temp,hopts);
-        plot(Hmss.frequencies,10*log10(Hmss.data)); axis([-150 150 -100 0]); grid <span class="string">on</span>;
-        h_title = title(<span class="string">''</span>); set(h_title,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>); title(<span class="string">'$(e)\qquad$Periodogram Power Spectrum Estimate of h(t)'</span>);
-        ylabel(<span class="string">'Power, [dB]'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>);
-        h_legend = legend(<span class="string">'supp$(\mathcal{F}h)\supset[-\Omega,\Omega]\qquad$'</span>);
-        set(h_legend,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-
+        hold <span class="string">on</span>;plot(Hmss.frequencies,10*log10(Hmss.data));grid <span class="string">on</span>;
+        legend(<span class="string">'supp$(\mathcal{F}h)\supset[-\Omega,\Omega]\qquad$'</span>);
     <span class="comment">% plot the periodogram power spectrum estmate of v=u*h</span>
-    subplot(326);
-        hopts = msspectrumopts(h_spctr,v_proper); set(hopts,<span class="string">'Fs'</span>,Fs,<span class="string">'SpectrumType'</span>,<span class="string">'onesided'</span>,<span class="string">'centerdc'</span>,true);
+    set(subplot(3,2,6),<span class="string">'xlim'</span>,[-150 150],<span class="string">'ylim'</span>,[-100 0],<span class="string">'box'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
+        <span class="string">'xlabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Frequency, [Hz]'</span>),<span class="keyword">...</span>
+        <span class="string">'ylabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Power, [dB]'</span>),<span class="keyword">...</span>
+        <span class="string">'title'</span>,text(<span class="string">'string'</span>,<span class="string">'$(f)\qquad$Periodogram Power Spectrum Estimate of v(t)'</span>));
+        hopts = msspectrumopts(h_spctr,v_proper);
+        set(hopts,<span class="string">'Fs'</span>,1/dt,<span class="string">'SpectrumType'</span>,<span class="string">'onesided'</span>,<span class="string">'centerdc'</span>,true);
         Hmss = msspectrum(h_spctr,v_proper,hopts);
-        plot(Hmss.frequencies,10*log10(Hmss.data)); axis([-150 150 -100 0]); grid <span class="string">on</span>;
-        h_title = title(<span class="string">''</span>); set(h_title,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>); title(<span class="string">'$(f)\qquad$Periodogram Power Spectrum Estimate of v(t)'</span>);
-        xlabel(<span class="string">'Frequency, [Hz]'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>); ylabel(<span class="string">'Power, [dB]'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>);
-        h_legend = legend(<span class="string">'supp$(\mathcal{F}v)=[-\Omega,\Omega]\qquad$'</span>);
-        set(h_legend,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-</pre><img vspace="5" hspace="5" src="nips_demo_06.png" alt=""> <h2>Generate Fig. 5 of [1]<a name="14"></a></h2><p>The follwoing procedures are same as above except that the input stimulus is now bandlimited to 100Hz.</p><pre class="codeinput">dt = 1e-6;                                  <span class="comment">% set the time step, [s]</span>
-f = 100;                                    <span class="comment">% set the input signal bandwidth, [Hz]</span>
-W = 2*pi*f;                                 <span class="comment">% calculate the bandwidth in [rad]</span>
+        hold <span class="string">on</span>;plot(Hmss.frequencies,10*log10(Hmss.data));grid <span class="string">on</span>;
+        legend(<span class="string">'supp$(\mathcal{F}v)=[-\Omega,\Omega]\qquad$'</span>);
+</pre><img vspace="5" hspace="5" src="nips_demo_06.png" alt=""> <h2>Generate Fig. 5 of [1]<a name="14"></a></h2><p>The follwoing procedures are same as above except that the input stimulus is now bandlimited to 100Hz.</p><pre class="codeinput">f  = 100;                                   <span class="comment">% set the input signal bandwidth, [Hz]</span>
+W  = 2*pi*f;                                <span class="comment">% calculate the bandwidth in [rad]</span>
 Ts = pi/W;                                  <span class="comment">% calculate the sampling period in [s]</span>
-t = 0:dt:1.52;                              <span class="comment">% create a time vector for the input stimulus</span>
-</pre><p>Create a bandlimited stimulus. The bandwidth W = 2\pi*100 rad/s</p><pre class="codeinput">randn(<span class="string">'state'</span>, 19871127);                   <span class="comment">% fix the state of randn() for reproducible results</span>
+t  = 0:dt:2.12;                             <span class="comment">% create a time vector for the input stimulus</span>
+</pre><p>Create a bandlimited stimulus. The bandwidth W = 2\pi*100 rad/s</p><pre class="codeinput">rng(19871127,<span class="string">'v5uniform'</span>);                  <span class="comment">% fix the state of random number generator for reproducible result</span>
 u = zeros(1,length(t));                     <span class="comment">% initialize the stimulus u(t)</span>
 N_samp = floor((t(end)-t(1))/Ts);           <span class="comment">% find the number of stimulus samples</span>
 ukT = randn(1,N_samp);                      <span class="comment">% use randomly generated signal samples (e.g., from a Gaussian distribution)</span>
@@ -256,14 +239,13 @@ ukT = randn(1,N_samp);                      <span class="comment">% use randomly
     u = u + ukT(k)*sinc(W*(t-k*Ts)/pi);     <span class="comment">% the first sample is zero</span>
 <span class="keyword">end</span>
 u = u/max(abs(u));                          <span class="comment">% normalize the input signal</span>
-</pre><p>Specify the filter h to be used</p><pre class="codeinput">T_1 = 0; T_2 = 0.1;                         <span class="comment">% specify T_1 and T_2</span>
-t_filt = T_1:dt:T_2;                        <span class="comment">% set the length of the impulse reponse, [s]</span>
-a = 200;                                    <span class="comment">% set the filter parameter</span>
-h = 3*a*exp(-a*t_filt).*((a*t_filt).^3/factorial(3)<span class="keyword">...</span>
-    -(a*t_filt).^5/factorial(5));
 </pre><p>Compute the filter projection Ph</p><pre class="codeinput">t_Ph = t - (t(1)+t(end))/2;                 <span class="comment">% get the time vector for Ph</span>
 g = W/pi*sinc(W*t_Ph/pi);                   <span class="comment">% calculate the sinc kernel g</span>
 Ph = dt*fftfilt(h,g);                       <span class="comment">% find the projection Ph by convolving h with g</span>
+idx = find( abs(t_Ph+0.05) &lt; dt/2 ):<span class="keyword">...</span>
+      find( abs(t_Ph-0.15) &lt; dt/2 );        <span class="comment">% only need Ph between [-0.05,0.15]</span>
+t_Ph = t_Ph(idx);                           <span class="comment">% truncate t_Ph</span>
+Ph = Ph(idx);                               <span class="comment">% truncate Ph</span>
 </pre><p>Filter the input signal u</p><pre class="codeinput">v = dt*fftfilt(h,u);                        <span class="comment">% convolve u with h</span>
 
 v_proper = v(length(h):end);                <span class="comment">% get the proper part of v</span>
@@ -277,221 +259,184 @@ kappa = 1;                                  <span class="comment">% set capacita
 </pre><p>Identify the filter projection Ph</p><pre class="codeinput">T_filt_rec = 0.11;                          <span class="comment">% specify the hypothesized length of the implulse response</span>
 tau_1 = -(T_filt_rec - t_filt(end))/2;      <span class="comment">% get tau_1 and tau_2. Here W is centered around the actual</span>
 tau_2 = t_filt(end)-tau_1;                  <span class="comment">% temporal support T_2-T_1</span>
-
-show_subpopulation = 0;                     <span class="comment">% use this flag to show recovery results from subsets of N</span>
-N_max = 10;                                 <span class="comment">% set the maximum number of windows to be used (could be smaller depending on the simulation)</span>
+N_max = 15;                                 <span class="comment">% set the maximum number of windows to be used (could be smaller depending on the simulation)</span>
 
 tic_CIM = tic;                              <span class="comment">% start the algorithm timer</span>
-[h_hat windows] = identify_h_ideal_iaf(dt, t_Ph, t_proper, u_proper, W, bias, delta, kappa,<span class="keyword">...</span>
+[h_hat windows] = identify_h_ideal_iaf(dt, t_Ph, t_proper, u_proper, W,<span class="keyword">...</span>
+                                       bias, delta, kappa,<span class="keyword">...</span>
                                        spk_train, tau_1, tau_2, N_max);
 
 timer = toc(tic_CIM);                       <span class="comment">% stop the algorithm timer</span>
-display([<span class="string">'CIM running time: '</span> num2str(floor(timer/60)) <span class="string">''' '</span> num2str(timer - 60*floor(timer/60), <span class="string">'%3.1f'</span>) <span class="string">'"'</span>]);
-</pre><pre class="codeoutput">CIM running time: 0' 4.5"
+runtime(<span class="string">'CIM running time: '</span>,timer);        <span class="comment">% display execution time</span>
+</pre><pre class="codeoutput">CIM running time: 0' 0.1"
 </pre><p>Plot the results</p><pre class="codeinput">figure(<span class="string">'Name'</span>,<span class="string">'NIPS 2010 Fig. 5'</span>,<span class="string">'Position'</span>,[0 0 1440 1080],<span class="string">'color'</span>,<span class="string">'white'</span>)
-
     <span class="comment">% plot the input stimulus u</span>
-    subplot(321);
-        plot(t_proper - t_proper(1), u_proper);
-        title(<span class="string">'$(a)\qquad$Input signal u(t)'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-        h_legend = legend([<span class="string">'$\Omega = 2\pi\cdot$'</span> num2str(f) <span class="string">'rad/s$\qquad$'</span>]); set(h_legend,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-        axis([0 1.4 -1 1]); ylabel(<span class="string">'Amplitude'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>);
-
+    set(subplot(3,2,1),<span class="string">'xlim'</span>,[0 1.4],<span class="string">'ylim'</span>,[-1 1],<span class="string">'box'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
+        <span class="string">'ylabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Amplitude'</span>),<span class="keyword">...</span>
+        <span class="string">'title'</span>,text(<span class="string">'string'</span>,<span class="string">'$(a)\qquad$Input signal u(t)'</span>));
+        hold <span class="string">on</span>;plot(t_proper - t_proper(1), u_proper);
+        legend([<span class="string">'$\Omega = 2\pi\cdot$'</span> num2str(f) <span class="string">'rad/s$\qquad$'</span>]);
     <span class="comment">% plot the spike train tk of the IAF neuron and windows W^i</span>
-    subplot(323);
-        N = length(windows);
-        D = bias*kappa/delta;
-        stem(spk_train(1)-t_proper(1), 1.1, <span class="string">'^k'</span>, <span class="string">'filled'</span>);
-        base_palette = <span class="string">'crgbym'</span>;
-        <span class="keyword">for</span> j=1:N
-            x = [windows{j}(1) windows{j}(end) windows{j}(end) windows{j}(1)] - t_filt(end);
-            y = [1e-2 1e-2 1.2-1e-2 1.2-1e-2]; patch(x,y,base_palette(mod(j,6)+1),<span class="string">'facealpha'</span>,1,<span class="string">'line'</span>,<span class="string">'none'</span>); hold <span class="string">on</span>;
+    set(subplot(323),<span class="string">'xlim'</span>,[0 1.4],<span class="string">'ylim'</span>,[0 1.2],<span class="string">'box'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
+        <span class="string">'yticklabel'</span>,[],<span class="string">'ytick'</span>,[],<span class="keyword">...</span>
+        <span class="string">'title'</span>,text(<span class="string">'string'</span>,<span class="string">'$(b)\qquad$Output of the [Filter]-[Ideal IAF] neural circuit'</span>));
+        N = numel(windows);      <span class="comment">% get the number of windows</span>
+        D = bias*kappa/delta;    <span class="comment">% compute the Nyquist rate</span>
+        cs = colormap(hsv(N+1)); <span class="comment">% set the color map</span>
+        hold <span class="string">on</span>;stem(spk_train-t_proper(1), 1.1*ones(size(spk_train)), <span class="string">'^k'</span>, <span class="string">'filled'</span>);
+        <span class="keyword">for</span> i=1:10
+            x = [windows{i}(1) windows{i}(end) windows{i}(end) windows{i}(1)] - t_filt(end);
+            y = [1e-2 1e-2 1.2-1e-2 1.2-1e-2];
+            patch(x,y,cs(i,:),<span class="string">'facealpha'</span>,1,<span class="string">'line'</span>,<span class="string">'none'</span>);hold <span class="string">on</span>;
         <span class="keyword">end</span>
         stem(spk_train-t_proper(1), 1.1*ones(size(spk_train)), <span class="string">'^k'</span>, <span class="string">'filled'</span>);
-        hold <span class="string">on</span>; box <span class="string">on</span>; set(gca,<span class="string">'yticklabel'</span>,[]); set(gca,<span class="string">'ytick'</span>,[]);
-        title(<span class="string">'$(b)\qquad$Output of the [Filter]-[Ideal IAF] neural circuit'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-        h_legend = legend([<span class="string">'$D = '</span> num2str(D,<span class="string">'%3.0f'</span>) <span class="string">'\;$Hz'</span>],[<span class="string">'Windows $\{W^i\}_{i=1}^{'</span> num2str(N) <span class="string">'}\quad$'</span>],<span class="string">'Location'</span>,<span class="string">'East'</span>);
-        set(h_legend,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-        axis([0 1.4 0 1.2]);
-
+        legend([<span class="string">'$D = '</span> num2str(D,<span class="string">'%3.0f'</span>) <span class="string">'\;$Hz'</span>],<span class="keyword">...</span>
+               [<span class="string">'Windows $\{W^i\}_{i=1}^{'</span> num2str(N) <span class="string">'}\quad$'</span>],<span class="string">'Location'</span>,<span class="string">'East'</span>);
     <span class="comment">% plot h, Ph and h_hat (the filter identified by the algorithm)</span>
-    subplot(325);
+    set(subplot(325),<span class="string">'xlim'</span>,[-0.05 0.15],<span class="string">'ylim'</span>,[-50 100],<span class="string">'box'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
+        <span class="string">'xlabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Time, [s]'</span>),<span class="string">'ylabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Amplitude'</span>),<span class="keyword">...</span>
+        <span class="string">'title'</span>,text(<span class="string">'string'</span>,<span class="string">'$(c)\qquad$Original filter vs. the identified filter'</span>));
 
-        <span class="comment">% h_long is a zero-padded version of h (of the same size as t_Ph)</span>
-        h_long = zeros(size(t_Ph));
-        h_long( find(abs(t_Ph-t_filt(1))&lt;dt/2): find(abs(t_Ph-t_filt(end))&lt;dt/2)  ) = h;
-
-        t_frame_start = tau_1; t_frame_end = tau_2;                 <span class="comment">% specify the temporal window on which to compute the MSE</span>
-        t_frame_i = (t_Ph&gt;=t_frame_start) &amp; (t_Ph&lt;=t_frame_end);    <span class="comment">% find indices of t for the given frame t</span>
-
+        <span class="comment">% find indices of t for the given temporal window on which to compute the MSE</span>
+        idx = (t_Ph&gt;=tau_1) &amp; (t_Ph&lt;=tau_2);
         <span class="comment">% Normalized RMSE between h and h_hat</span>
-        h_hhat_err   = abs(h_long-h_hat)/max(abs(h_long));          <span class="comment">% compute the absolute error</span>
-        h_hhat_RMSE  = sqrt(dt*trapz(h_hhat_err(t_frame_i).^2)/ <span class="keyword">...</span><span class="comment"> % compute the RMSE</span>
-                       (length(t_frame_i)*dt));
-
+        h_hhat_err   = abs(h_long-h_hat)/max(abs(h_long));                <span class="comment">% compute the absolute error</span>
+        h_hhat_RMSE  = sqrt(dt*trapz(h_hhat_err(idx).^2)/(tau_2-tau_1));  <span class="comment">% compute the RMSE</span>
         <span class="comment">% Normalized RMSE between Ph  and h_hat</span>
-        Ph_hhat_err  = abs(Ph-h_hat)/max(abs(Ph));                  <span class="comment">% compute the absolute error</span>
-        Ph_hhat_RMSE = sqrt(dt*trapz(Ph_hhat_err(t_frame_i).^2)/ <span class="keyword">...</span><span class="comment">% compute the RMSE</span>
-                       (length(t_frame_i)*dt));
-
-        plot(t_Ph, h_long,<span class="string">'--k'</span>,t_Ph, Ph,<span class="string">'-b'</span>,t_Ph,h_hat,<span class="string">'-r'</span>);
-        h_title = title(<span class="string">'$(c)\qquad$Original filter vs. the identified filter'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-        h_legend = legend([<span class="string">'$h,\,$RMSE$(\hat{h},h)$ ='</span> num2str(h_hhat_RMSE, <span class="string">'%3.2e'</span>) <span class="string">'$\quad$'</span>],<span class="keyword">...</span>
-                   [<span class="string">'$\mathcal{P}h,\,$RMSE$(\hat{h},\mathcal{P}h)$ ='</span> num2str(Ph_hhat_RMSE, <span class="string">'%3.2e'</span>) <span class="string">'$\qquad$'</span>],<span class="keyword">...</span>
-                   <span class="string">'$\hat{h}$'</span>,<span class="string">'Location'</span>,<span class="string">'NorthEast'</span>);
-        set(h_legend,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-        axis([-0.05 0.15 -50 100]);
-        ylabel(<span class="string">'Amplitude'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>); xlabel(<span class="string">'Time, [s]'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>);
-
-
+        Ph_hhat_err  = abs(Ph-h_hat)/max(abs(Ph));                        <span class="comment">% compute the absolute error</span>
+        Ph_hhat_RMSE = sqrt(dt*trapz(Ph_hhat_err(idx).^2)/(tau_2-tau_1)); <span class="comment">% compute the RMSE;</span>
+        hold <span class="string">on</span>;plot(t_Ph, h_long,<span class="string">'--k'</span>,t_Ph, Ph,<span class="string">'-b'</span>,t_Ph,h_hat,<span class="string">'-r'</span>);
+        legend([<span class="string">'$h,\,$RMSE$(\hat{h},h)$ ='</span> num2str(h_hhat_RMSE, <span class="string">'%3.2e'</span>) <span class="string">'$\quad$'</span>],<span class="keyword">...</span>
+               [<span class="string">'$\mathcal{P}h,\,$RMSE$(\hat{h},\mathcal{P}h)$ ='</span> num2str(Ph_hhat_RMSE, <span class="string">'%3.2e'</span>) <span class="string">'$\qquad$'</span>],<span class="keyword">...</span>
+               <span class="string">'$\hat{h}$'</span>,<span class="string">'Location'</span>,<span class="string">'NorthEast'</span>);
     <span class="comment">% plot the periodogram power spectrum estmate of u</span>
-    subplot(322);
-       	Fs = 1/dt;                                          <span class="comment">% get the sampling frequency</span>
-        h_spctr = spectrum.periodogram(<span class="string">'hamming'</span>);          <span class="comment">% use a spectral estimator with a hamming window</span>
-
-        hopts = msspectrumopts(h_spctr,u_proper); set(hopts,<span class="string">'Fs'</span>,Fs,<span class="string">'SpectrumType'</span>,<span class="string">'onesided'</span>,<span class="string">'centerdc'</span>,true);
+    set(subplot(3,2,2),<span class="string">'xlim'</span>,[-150 150],<span class="string">'ylim'</span>,[-100 0],<span class="string">'box'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
+        <span class="string">'ylabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Power, [dB]'</span>),<span class="keyword">...</span>
+        <span class="string">'title'</span>,text(<span class="string">'string'</span>,<span class="string">'$(d)\qquad$Periodogram Power Spectrum Estimate of u(t)'</span>));
+        h_spctr = spectrum.periodogram(<span class="string">'hamming'</span>);
+        hopts = msspectrumopts(h_spctr,u_proper);
+        set(hopts,<span class="string">'Fs'</span>,1/dt,<span class="string">'SpectrumType'</span>,<span class="string">'onesided'</span>,<span class="string">'centerdc'</span>,true);
         Hmss = msspectrum(h_spctr,u_proper,hopts);
-        plot(Hmss.frequencies,10*log10(Hmss.data)); axis([-150 150 -100 0]); grid <span class="string">on</span>;
-        h_title = title(<span class="string">''</span>); set(h_title,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>); title(<span class="string">'$(d)\qquad$Periodogram Power Spectrum Estimate of u(t)'</span>);
-        ylabel(<span class="string">'Power, [dB]'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>);
-        h_legend = legend(<span class="string">'supp$(\mathcal{F}u)=[-\Omega,\Omega]\qquad$'</span>);
-        set(h_legend,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-
-  	<span class="comment">% plot the periodogram power spectrum estmate of h</span>
-    subplot(324);
+        hold <span class="string">on</span>;plot(Hmss.frequencies,10*log10(Hmss.data));grid <span class="string">on</span>;
+        legend(<span class="string">'supp$(\mathcal{F}u)=[-\Omega,\Omega]\qquad$'</span>);
+    <span class="comment">% plot the periodogram power spectrum estmate of h</span>
+    set(subplot(3,2,4),<span class="string">'xlim'</span>,[-150 150],<span class="string">'ylim'</span>,[-100 0],<span class="string">'box'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
+        <span class="string">'ylabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Power, [dB]'</span>),<span class="keyword">...</span>
+        <span class="string">'title'</span>,text(<span class="string">'string'</span>,<span class="string">'$(e)\qquad$Periodogram Power Spectrum Estimate of h(t)'</span>));
         h_temp = zeros(size(t_proper));
         h_temp(1:length(h)) = h;
-        hopts = msspectrumopts(h_spctr,h_temp); set(hopts,<span class="string">'Fs'</span>,Fs,<span class="string">'SpectrumType'</span>,<span class="string">'onesided'</span>,<span class="string">'centerdc'</span>,true);
+        hopts = msspectrumopts(h_spctr,h_temp);
+        set(hopts,<span class="string">'Fs'</span>,1/dt,<span class="string">'SpectrumType'</span>,<span class="string">'onesided'</span>,<span class="string">'centerdc'</span>,true);
         Hmss = msspectrum(h_spctr,h_temp,hopts);
-        plot(Hmss.frequencies,10*log10(Hmss.data)); axis([-150 150 -100 0]); grid <span class="string">on</span>;
-        h_title = title(<span class="string">''</span>); set(h_title,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>); title(<span class="string">'$(e)\qquad$Periodogram Power Spectrum Estimate of h(t)'</span>);
-        ylabel(<span class="string">'Power, [dB]'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>);
-        h_legend = legend(<span class="string">'supp$(\mathcal{F}h)\supset[-\Omega,\Omega]\qquad$'</span>);
-        set(h_legend,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-
+        hold <span class="string">on</span>;plot(Hmss.frequencies,10*log10(Hmss.data));grid <span class="string">on</span>;
+        legend(<span class="string">'supp$(\mathcal{F}h)\supset[-\Omega,\Omega]\qquad$'</span>);
     <span class="comment">% plot the periodogram power spectrum estmate of v=u*h</span>
-    subplot(326);
-        hopts = msspectrumopts(h_spctr,v_proper); set(hopts,<span class="string">'Fs'</span>,Fs,<span class="string">'SpectrumType'</span>,<span class="string">'onesided'</span>,<span class="string">'centerdc'</span>,true);
+    set(subplot(3,2,6),<span class="string">'xlim'</span>,[-150 150],<span class="string">'ylim'</span>,[-100 0],<span class="string">'box'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
+        <span class="string">'xlabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Frequency, [Hz]'</span>),<span class="keyword">...</span>
+        <span class="string">'ylabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Power, [dB]'</span>),<span class="keyword">...</span>
+        <span class="string">'title'</span>,text(<span class="string">'string'</span>,<span class="string">'$(f)\qquad$Periodogram Power Spectrum Estimate of v(t)'</span>));
+        hopts = msspectrumopts(h_spctr,v_proper);
+        set(hopts,<span class="string">'Fs'</span>,1/dt,<span class="string">'SpectrumType'</span>,<span class="string">'onesided'</span>,<span class="string">'centerdc'</span>,true);
         Hmss = msspectrum(h_spctr,v_proper,hopts);
-        plot(Hmss.frequencies,10*log10(Hmss.data)); axis([-150 150 -100 0]); grid <span class="string">on</span>;
-        h_title = title(<span class="string">''</span>); set(h_title,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>); title(<span class="string">'$(f)\qquad$Periodogram Power Spectrum Estimate of v(t)'</span>);
-        xlabel(<span class="string">'Frequency, [Hz]'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>); ylabel(<span class="string">'Power, [dB]'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>);
-        h_legend = legend(<span class="string">'supp$(\mathcal{F}v)=[-\Omega,\Omega]\qquad$'</span>);
-        set(h_legend,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>);
-</pre><img vspace="5" hspace="5" src="nips_demo_07.png" alt=""> <h2>Generate Fig. 6 of [1]<a name="22"></a></h2><p>In Fig. 6a we plot the mean square error (MSE) between the filter projection Ph and the identified filter h_hat as a function of the number of temporal windows N.</p><p>In Fig. 6b we plot the mean square error (MSE) between the original filter h and the identified filter h_hat as a function of the input signal bandwidth</p><pre class="codeinput"><span class="comment">% The following simulation is somewhat time-consuming (10 min). Use the</span>
-<span class="comment">% flag below to specify whether or not to generate the figure.</span>
-Generate_Figure6 = 1;
+        hold <span class="string">on</span>;plot(Hmss.frequencies,10*log10(Hmss.data));grid <span class="string">on</span>;
+        legend(<span class="string">'supp$(\mathcal{F}v)=[-\Omega,\Omega]\qquad$'</span>);
+</pre><img vspace="5" hspace="5" src="nips_demo_07.png" alt=""> <h2>Generate Fig. 6 of [1]<a name="21"></a></h2><p>In Fig. 6a we plot the mean square error (MSE) between the filter projection Ph and the identified filter h_hat as a function of the number of temporal windows N.</p><p>In Fig. 6b we plot the mean square error (MSE) between the original filter h and the identified filter h_hat as a function of the input signal bandwidth</p><pre class="codeinput">Fig6_tic = tic;                             <span class="comment">% initialize the timer</span>
 
-<span class="keyword">if</span> Generate_Figure6 == 1
-</pre><pre class="codeinput">Fig6_tic = tic;                             <span class="comment">% initialize the timer</span>
-
-dt = 5e-6;                                  <span class="comment">% set the time step, [s]</span>
 f = 100;                                    <span class="comment">% set the input signal bandwidth, [Hz]</span>
 W = 2*pi*f;                                 <span class="comment">% calculate the bandwidth in [rad]</span>
 Ts = pi/W;                                  <span class="comment">% calculate the sampling period in [s]</span>
 t = 0:dt:8.5;                               <span class="comment">% create a time vector for the input stimulus</span>
-</pre><p>Create a bandlimited stimulus. The bandwidth W = 2\pi*100 rad/s</p><pre class="codeinput">randn(<span class="string">'state'</span>, 19871127);                   <span class="comment">% fix the state of randn() for reproducible results</span>
+</pre><p>Create a bandlimited stimulus. The bandwidth W = 2\pi*100 rad/s</p><pre class="codeinput">rng(19871127,<span class="string">'v5uniform'</span>);                  <span class="comment">% set the state of random number generator</span>
 u = zeros(1,length(t));                     <span class="comment">% initialize the stimulus u(t)</span>
 N_samp = floor((t(end)-t(1))/Ts);           <span class="comment">% find the number of stimulus samples</span>
 ukT = randn(1,N_samp);                      <span class="comment">% use randomly generated signal samples (e.g., from a Gaussian distribution)</span>
 
-<span class="keyword">for</span> k=1:N_samp
-    u = u + ukT(k)*sinc(W*(t-k*Ts)/pi);     <span class="comment">% the first sample is zero</span>
-<span class="keyword">end</span>
-u = u/max(abs(u));                          <span class="comment">% normalize the input signal</span>
-</pre><p>Specify the filter h to be used</p><pre class="codeinput">T_1 = 0; T_2 = 0.1;                         <span class="comment">% specify T_1 and T_2</span>
-t_filt = T_1:dt:T_2;                        <span class="comment">% set the length of the impulse reponse, [s]</span>
-a = 200;                                    <span class="comment">% set the filter parameter</span>
-h = 3*a*exp(-a*t_filt).*((a*t_filt).^3/factorial(3)<span class="keyword">...</span>
-    -(a*t_filt).^5/factorial(5));
+<span class="comment">% We use another faster method to create stimulus. The idea is to pass the</span>
+<span class="comment">% samples, ukT, of the stimulus through a low pass filter (LPF).</span>
+u( (1:N_samp)*round(Ts/dt)+1 ) = ukT;       <span class="comment">% set sample train</span>
+t_sinc = -t(end):dt:t(end);                 <span class="comment">% set time course of the LFP</span>
+u = fftfilt(u, sinc(t_sinc/Ts)/Ts);         <span class="comment">% pass samples through the LFP</span>
+u = u(end-length(t)+1:end);                 <span class="comment">% get the proper part of u</span>
+u = u/max(abs(u));                          <span class="comment">% normalize the stimulus</span>
 </pre><p>Compute the filter projection Ph</p><pre class="codeinput">t_Ph = t - (t(1)+t(end))/2;                 <span class="comment">% get the time vector for Ph</span>
 g = W/pi*sinc(W*t_Ph/pi);                   <span class="comment">% calculate the sinc kernel g</span>
 Ph = dt*fftfilt(h,g);                       <span class="comment">% find the projection Ph by convolving h with g</span>
+idx = find( abs(t_Ph+0.05) &lt; dt/2 ):<span class="keyword">...</span>
+      find( abs(t_Ph-0.15) &lt; dt/2 );        <span class="comment">% only need Ph between [-0.05,0.15]</span>
+t_Ph = t_Ph(idx);                           <span class="comment">% truncate t_Ph</span>
+Ph = Ph(idx);                               <span class="comment">% truncate Ph</span>
 </pre><p>Filter the input signal u</p><pre class="codeinput">v = dt*fftfilt(h,u);                        <span class="comment">% convolve u with h</span>
 
 v_proper = v(length(h):end);                <span class="comment">% get the proper part of v</span>
 t_proper = t(length(h):end);                <span class="comment">% get the correspoding time vector</span>
 u_proper = u(length(h):end);                <span class="comment">% get the corresponding stimulus</span>
-</pre><p>Get data for Fig. 6a</p><p>To demonstrate how the MSE changes as a function of the neuron spike density D, we encode the input signal with an IAF neuron having a different bias b = D*delta/kappa.</p><pre class="codeinput">Fig6a_tic = tic;                            <span class="comment">% initialize the timer</span>
+</pre><p>Get data for Fig. 6a</p><p>To demonstrate how the MSE changes as a function of the neuron spike density D, we encode the input signal with an IAF neuron having a different bias b = D*delta/kappa.</p><pre class="codeinput">Fig6a_tic = tic;                            <span class="comment">% initialize the timer for Fig.6a</span>
 
 D = [20 40 60];                             <span class="comment">% set the average spiking density</span>
-MSE_palette = <span class="string">'kbr'</span>;                        <span class="comment">% set the color palette for plotting</span>
 MSE_N = cell(3,1);                          <span class="comment">% initialize the MSE cell</span>
 N_max = 30;                                 <span class="comment">% set the maximum number of windows to be used</span>
-
-t_frame_start = tau_1; t_frame_end = tau_2;                 <span class="comment">% specify the temporal window on which to compute the MSE</span>
-t_frame_i = (t_Ph&gt;=t_frame_start) &amp; (t_Ph&lt;=t_frame_end);    <span class="comment">% find indices of t for the given frame t</span>
 
 T_filt_rec = 0.11;                          <span class="comment">% specify the hypothesized length of the implulse response</span>
 tau_1 = -(T_filt_rec - t_filt(end))/2;      <span class="comment">% get tau_1 and tau_2. Here W is centered around the actual</span>
 tau_2 = t_filt(end)-tau_1;                  <span class="comment">% temporal support T_2-T_1</span>
-
-show_all_windows = 0;                       <span class="comment">% use this flag to show recovery from individual windows</span>
-show_MSE_N = 1;                             <span class="comment">% use this flag to show error as a function of the number of windows N</span>
+idx = (t_Ph&gt;=tau_1) &amp; (t_Ph&lt;=tau_2);        <span class="comment">% find indices of t for the given temporal window on which to compute the MSE</span>
 
 <span class="keyword">for</span> counter = 1:length(D)
-
-    bias  = D(counter)*delta/kappa;         <span class="comment">% set the bias</span>
+    d     = D(counter);
     delta = 0.007;                          <span class="comment">% set the threshold</span>
     kappa = 1;                              <span class="comment">% set capacitance</span>
-
+    bias  = d*delta/kappa;                  <span class="comment">% set the bias</span>
     <span class="comment">% Encode the filter output v=u*h with an IAF neuron</span>
     [spk_train vol_trace] = ideal_iaf_encode(v_proper,t_proper,bias,delta,kappa);
 
     <span class="comment">% Identify the filter projection Ph, calculate MSE as a function of N</span>
     [h_hat windows h_hat_N] <span class="keyword">...</span>
         = identify_h_ideal_iaf(dt, t_Ph, t_proper, u_proper, W, bias,<span class="keyword">...</span>
-        delta, kappa, spk_train, tau_1, tau_2,<span class="keyword">...</span>
-        N_max,<span class="string">'Calc_MSE_N'</span>,true);
+          delta, kappa, spk_train, tau_1, tau_2, N_max,<span class="string">'Calc_MSE_N'</span>,true);
+
     N = length(windows);
     <span class="comment">% Compute the normalized MSE</span>
     MSE_N{counter} = zeros(1,N);
     <span class="keyword">for</span> i=1:N
         <span class="comment">% Normalized RMSE error for Ph - h_hat</span>
         Ph_hhat_err  = abs(Ph-h_hat_N(i,:))/max(abs(Ph));
-        Ph_hhat_RMSE = sqrt(dt*trapz(Ph_hhat_err(t_frame_i).^2)/ <span class="keyword">...</span>
-            (length(t_frame_i)*dt));
+        Ph_hhat_RMSE = sqrt(dt*trapz(Ph_hhat_err(idx).^2)/(tau_2-tau_1));
         MSE_N{counter}(i) = 10*log10( Ph_hhat_RMSE^2 );
     <span class="keyword">end</span>
 <span class="keyword">end</span>
 
-timer = toc(Fig6a_tic);
-display([<span class="string">'Fig. 6a time: '</span> num2str(floor(timer/60)) <span class="string">''' '</span> num2str(timer - 60*floor(timer/60), <span class="string">'%3.1f'</span>) <span class="string">'"'</span>]);
-</pre><pre class="codeoutput">Fig. 6a time: 7' 18.2"
-</pre><p>Get data for Fig. 6b</p><p>In the following, for fixed number of windows N, we compute the MSE between the original filter h and the identified filter h_hat as a function of the input signal bandwidth</p><pre class="codeinput">Fig6b_tic = tic;                            <span class="comment">% initialize the timer</span>
+timer = toc(Fig6a_tic);                     <span class="comment">% stop the timer for Fig.6a</span>
+runtime(<span class="string">'Fig. 6a time: '</span>,timer);            <span class="comment">% display the running time for Fig.6a</span>
+</pre><pre class="codeoutput">Fig. 6a time: 0' 3.9"
+</pre><p>Get data for Fig. 6b</p><p>In the following, for fixed number of windows N, we compute the MSE between the original filter h and the identified filter h_hat as a function of the input signal bandwidth</p><pre class="codeinput">Fig6b_tic = tic;                            <span class="comment">% initialize the timer for Fig.6b</span>
 
-f = 10:10:150;                             	<span class="comment">% specify the bandwidth vector</span>
+f = 10:10:150;                              <span class="comment">% specify the bandwidth vector</span>
 t = 0:dt:1.52;                              <span class="comment">% specify the time vector</span>
 N = 10;                                     <span class="comment">% set the number of windows</span>
 
 <span class="comment">% specify Ideal IAF neuron parameters</span>
-delta = 0.007;                             	<span class="comment">% set the threshold</span>
-bias  = 0.42;                              	<span class="comment">% set the bias</span>
+delta = 0.007;                              <span class="comment">% set the threshold</span>
+bias  = 0.42;                               <span class="comment">% set the bias</span>
 kappa = 1;                                  <span class="comment">% set the capacitance</span>
 
-
+t_Ph = -0.05:dt:0.15;
+idx = (t_Ph&gt;=tau_1) &amp; (t_Ph&lt;=tau_2);
 MSE_BW = zeros(1,length(f));
-
-<span class="keyword">for</span> counter = 1:length(f)
-    W   = 2*pi*f(counter);                 	<span class="comment">% calculate the bandwidth in [rad]</span>
-    Ts  = pi/W;                            	<span class="comment">% calculate the sampling period in [s]</span>
+t_sinc = -t(end):dt:t(end);                 <span class="comment">% set time course of the LFP</span>
+<span class="keyword">for</span> i = 1:length(f)
+    W   = 2*pi*f(i);                        <span class="comment">% calculate the bandwidth in [rad]</span>
+    Ts  = pi/W;                             <span class="comment">% calculate the sampling period in [s]</span>
 
 
     <span class="comment">% Create a bandlimited signal</span>
-    randn(<span class="string">'state'</span>, 19871127);               <span class="comment">% fix the state of randn() for reproducible results</span>
+    rng(19871127,<span class="string">'v5uniform'</span>);              <span class="comment">% set the state of random number generator</span>
     u = zeros(1,length(t));                 <span class="comment">% initialize the stimulus u(t)</span>
     N_samp = floor((t(end)-t(1))/Ts);       <span class="comment">% find the number of stimulus samples</span>
     ukT = randn(1,N_samp);                  <span class="comment">% use randomly generated signal samples (e.g., from a Gaussian distribution)</span>
-
-    <span class="keyword">for</span> k=1:N_samp
-        u = u + ukT(k)*sinc(W*(t-k*Ts)/pi);	<span class="comment">% the first sample is zero</span>
-    <span class="keyword">end</span>
-    u = u/max(abs(u));                      <span class="comment">% normalize the input signal</span>
-
-    <span class="comment">% Compute the filter projection Ph</span>
-    t_Ph = t - (t(1)+t(end))/2;             <span class="comment">% get the time vector for Ph</span>
-    g = W/pi*sinc(W*t_Ph/pi);               <span class="comment">% calculate the sinc kernel g</span>
-    Ph = dt*fftfilt(h,g);                   <span class="comment">% find the projection Ph by convolving h with g</span>
+    u( (1:N_samp)*round(Ts/dt)+1 ) = ukT;   <span class="comment">% set sample train</span>
+    u = fftfilt(u, sinc(t_sinc/Ts)/Ts);     <span class="comment">% pass samples through the LFP</span>
+    u = u(end-length(t)+1:end);             <span class="comment">% get the proper part of u</span>
+    u = u/max(abs(u));                      <span class="comment">% normalize the stimulus</span>
 
     <span class="comment">% Filter the input signal u</span>
     v = dt*fftfilt(h,u);                    <span class="comment">% convolve u with h</span>
@@ -505,110 +450,105 @@ MSE_BW = zeros(1,length(f));
 
     <span class="comment">% Identify the filter projection</span>
     h_hat = identify_h_ideal_iaf(dt, t_Ph, t_proper, u_proper, W, bias, delta,<span class="keyword">...</span>
-        kappa, spk_train, tau_1, tau_2, N_max);
-
-    <span class="comment">% Compute the MSE</span>
-    <span class="comment">% h_long is a zero-padded version of h (of the same size as t_Ph)</span>
-    h_long = zeros(size(t_Ph));
-    h_long( find(abs(t_Ph-t_filt(1))&lt;dt/2): find(abs(t_Ph-t_filt(end))&lt;dt/2)  ) = h;
-
-
-    t_frame_start = tau_1; t_frame_end = tau_2;                 <span class="comment">% specify the temporal window on which to compute the MSE</span>
-    t_frame_i = (t_Ph&gt;=t_frame_start) &amp; (t_Ph&lt;=t_frame_end);    <span class="comment">% find indices of t for the given frame t</span>
-
-
+                                 kappa, spk_train, tau_1, tau_2, N_max);
 
     <span class="comment">% Normalized RMSE between h and h_hat</span>
-    h_hhat_err   = abs(h_long-h_hat)/max(abs(h_long));          <span class="comment">% compute the absolute error</span>
-    h_hhat_RMSE  = sqrt(dt*trapz(h_hhat_err(t_frame_i).^2)/ <span class="keyword">...</span><span class="comment"> % compute the RMSE</span>
-        (length(t_frame_i)*dt));
+    h_hhat_err   = abs(h_long-h_hat)/max(abs(h_long));               <span class="comment">% compute the absolute error</span>
+    h_hhat_RMSE  = sqrt(dt*trapz(h_hhat_err(idx).^2)/(tau_2-tau_1)); <span class="comment">% compute the RMSE</span>
 
-    MSE_BW(counter) = 10*log10( h_hhat_RMSE ^2 );
+    MSE_BW(i) = 10*log10( h_hhat_RMSE ^2 );
 <span class="keyword">end</span>
-timer = toc(Fig6b_tic);
-display([<span class="string">'Fig. 6b time: '</span> num2str(floor(timer/60)) <span class="string">''' '</span> num2str(timer - 60*floor(timer/60), <span class="string">'%3.1f'</span>) <span class="string">'"'</span>]);
-</pre><pre class="codeoutput">Fig. 6b time: 1' 8.1"
+timer = toc(Fig6b_tic);                     <span class="comment">% stop the timer for Fig.6b</span>
+runtime(<span class="string">'Fig. 6b time: '</span>,timer);            <span class="comment">% display the running time for Fig.6b</span>
+</pre><pre class="codeoutput">Fig. 6b time: 0' 4.6"
 </pre><p>Plot Fig. 6 of [1]</p><pre class="codeinput">figure(<span class="string">'Name'</span>,<span class="string">'NIPS 2010 Fig. 6'</span>,<span class="string">'Position'</span>,[0 0 1200 800], <span class="string">'color'</span>, <span class="string">'white'</span>);
+    <span class="comment">% MSE vs number of windows</span>
+    set(subplot(211),<span class="string">'xlim'</span>,[0 30],<span class="string">'ylim'</span>,[-100 20],<span class="string">'box'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
+        <span class="string">'title'</span>,text(<span class="string">'string'</span>,<span class="string">'MSE$(\hat{h},\mathcal{P}h)$ vs. the Number of Temporal Windows'</span>),<span class="keyword">...</span>
+        <span class="string">'xlabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Number of Windows $N$'</span>),<span class="keyword">...</span>
+        <span class="string">'ylabel'</span>,text(<span class="string">'string'</span>,<span class="string">'MSE$(\hat{h},\mathcal{P}h)$, [dB]'</span>));
+        marker = <span class="string">'osd'</span>; marker_size = [5 5 7];MSE_palette = <span class="string">'kbr'</span>;
+        <span class="keyword">for</span> counter = 1:length(D)
+            hold <span class="string">on</span>;
+            plot(1:length(MSE_N{counter}),MSE_N{counter}, [<span class="string">'-'</span> MSE_palette(counter)],<span class="keyword">...</span>
+                 <span class="string">'Marker'</span>, marker(counter), <span class="string">'MarkerFaceColor'</span>, MSE_palette(counter),<span class="keyword">...</span>
+                 <span class="string">'markersize'</span>, marker_size(counter));
+        <span class="keyword">end</span>
+        <span class="keyword">for</span> counter = 1:length(D)
+            hold <span class="string">on</span>;plot([2*pi*100/(pi*D(counter)) 2*pi*100/(pi*D(counter))],<span class="keyword">...</span>
+                         [-100 20],[<span class="string">'--'</span> MSE_palette(counter)]);
+        <span class="keyword">end</span>
+        legend(<span class="string">'$D = 20\;$Hz'</span>,<span class="string">'$D = 40\;$Hz'</span>,<span class="string">'$D = 60\;$Hz'</span>, <span class="string">'$\Omega/(\pi D_1)$'</span>,<span class="keyword">...</span>
+               <span class="string">'$\Omega/(\pi D_2)$'</span>,<span class="string">'$\Omega/(\pi D_3)$'</span>, <span class="string">'Location'</span>,<span class="string">'NorthEast'</span>);
+    set(subplot(212),<span class="string">'xlim'</span>,[10 150],<span class="string">'ylim'</span>,[-70 0],<span class="string">'xtick'</span>,10:10:150,<span class="string">'box'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
+        <span class="string">'title'</span>,text(<span class="string">'string'</span>,<span class="string">'MSE$(\hat{h},h)$ vs. input signal bandwidth'</span>),<span class="keyword">...</span>
+        <span class="string">'xlabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Input signal bandwidth $\Omega/(2\pi)$, [Hz]'</span>),<span class="keyword">...</span>
+        <span class="string">'ylabel'</span>,text(<span class="string">'string'</span>,<span class="string">'MSE$(\hat{h},h)$, [dB]'</span>));
+        hold <span class="string">on</span>; plot( f, MSE_BW, <span class="string">'-b'</span>,<span class="string">'Marker'</span>, <span class="string">'o'</span>, <span class="string">'MarkerFaceColor'</span>, <span class="string">'b'</span>, <span class="string">'markersize'</span>, 5);
+        legend([<span class="string">'$D = 60\;$Hz, $N = '</span> num2str(N) <span class="string">'\quad$'</span>],<span class="string">'Location'</span>,<span class="string">'NorthEast'</span>);
 
-subplot(211) <span class="comment">% MSE vs number of windows</span>
-    marker = <span class="string">'osd'</span>;
-    marker_size = [5 5 7];
-
-    <span class="keyword">for</span> counter = 1:length(D)
-        plot(1:length(MSE_N{counter}),MSE_N{counter}, [<span class="string">'-'</span> MSE_palette(counter)],<span class="keyword">...</span>
-            <span class="string">'Marker'</span>, marker(counter), <span class="string">'MarkerFaceColor'</span>, MSE_palette(counter), <span class="string">'markersize'</span>, marker_size(counter)); hold <span class="string">on</span>;
-    <span class="keyword">end</span>
-    <span class="keyword">for</span> counter = 1:length(D)
-        plot([2*pi*100/(pi*D(counter)) 2*pi*100/(pi*D(counter))], [-100 20], <span class="keyword">...</span>
-            [<span class="string">'--'</span> MSE_palette(counter)]); hold <span class="string">on</span>;
-    <span class="keyword">end</span>
-    title(<span class="string">'MSE$(\hat{h},\mathcal{P}h)$ vs. the Number of Temporal Windows'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>);
-    xlabel(<span class="string">'Number of Windows $N$'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>);
-    ylabel(<span class="string">'MSE$(\hat{h},\mathcal{P}h)$, [dB]'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>);
-    h_legend = legend(<span class="string">'$D = 20\;$Hz'</span>,<span class="string">'$D = 40\;$Hz'</span>,<span class="string">'$D = 60\;$Hz'</span>, <span class="string">'$\Omega/(\pi D_1)$'</span>, <span class="string">'$\Omega/(\pi D_2)$'</span>,<span class="string">'$\Omega/(\pi D_3)$'</span>, <span class="string">'Location'</span>,<span class="string">'NorthEast'</span>);
-    set(h_legend,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>);
-
-    axis([0 30 -100 20]);
-
-subplot(212)
-    plot( f, MSE_BW, <span class="string">'-b'</span>,<span class="string">'Marker'</span>, <span class="string">'o'</span>, <span class="string">'MarkerFaceColor'</span>, <span class="string">'b'</span>, <span class="string">'markersize'</span>, 5);
-    h_title = title(<span class="string">'MSE$(\hat{h},h)$ vs. input signal bandwidth'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>);
-    xlabel(<span class="string">'Input signal bandwidth $\Omega/(2\pi)$, [Hz]'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>);
-    ylabel(<span class="string">'MSE$(\hat{h},h)$, [dB]'</span>,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>);
-    h_legend = legend([<span class="string">'$D = 60\;$Hz, $N = '</span> num2str(N) <span class="string">'\quad$'</span>], <span class="keyword">...</span>
-                      <span class="string">'Location'</span>,<span class="string">'NorthEast'</span>);
-    set(h_legend,<span class="string">'interpreter'</span>,<span class="string">'latex'</span>);
-    axis([10 150 -70 0]); set(gca,<span class="string">'xtick'</span>,10:10:150)
-
-timer = toc(Fig6_tic);
-display([<span class="string">'Total Fig. 6 time: '</span> num2str(floor(timer/60)) <span class="string">''' '</span> num2str(timer - 60*floor(timer/60), <span class="string">'%3.1f'</span>) <span class="string">'"'</span>]);
-</pre><pre class="codeoutput">Total Fig. 6 time: 10' 11.2"
-</pre><img vspace="5" hspace="5" src="nips_demo_08.png" alt=""> <pre class="codeinput"><span class="keyword">end</span>
-
-timer = toc(tic_demo);                      	<span class="comment">% stop the algorithm timer</span>
-display([<span class="string">'Demo time: '</span> num2str(floor(timer/60)) <span class="string">''' '</span> num2str(timer - 60*floor(timer/60), <span class="string">'%3.1f'</span>) <span class="string">'"'</span>]);
-</pre><pre class="codeoutput">Demo time: 10' 55.9"
-</pre><p class="footer"><br>
-      Published with MATLAB&reg; 7.12<br></p></div><!--
+timer = toc(Fig6_tic);                          <span class="comment">% stop the timer for Fig.6</span>
+runtime(<span class="string">'Total Fig. 6 time: '</span>,timer);           <span class="comment">% display the running time for Fig.6</span>
+</pre><pre class="codeoutput">Total Fig. 6 time: 0' 11.8"
+</pre><img vspace="5" hspace="5" src="nips_demo_08.png" alt=""> <p>Finalize the demo.</p><pre class="codeinput">timer = toc(tic_demo);                          <span class="comment">% stop the demo timer</span>
+runtime(<span class="string">'Demo time: '</span>,timer);                   <span class="comment">% display the demo time</span>
+set(0,<span class="string">'defaulttextinterpreter'</span>,<span class="string">'none'</span>)          <span class="comment">% reset MATLAB latex interpreter</span>
+</pre><pre class="codeoutput">Demo time: 0' 31.3"
+</pre><h2>Reference<a name="29"></a></h2><p>[1] A.A. Lazar and Y.B. Slutskiy, Identifying Dendritic Processing, Advances in Neural Information Processing Systems 23, pp. 1261-1269, 2010</p><p>[2] E.H. Adelson and J R. Bergen, Spatiotemporal energy models for the perception of motion, Journal of the Optical Society of America, Vol 2(2),1985</p><p><i>Author: Yevgeniy B. Slutskiy <a href="ys2146@columbia.edu">ys2146@columbia.edu</a></i></p><p><i>Revision Author: Chung-Heng Yeh <a href="chyeh@ee.columbia.edu">chyeh@ee.columbia.edu</a></i></p><p><i>Bionet Group, Columbia University</i></p><p><i>Copyright 2012-2014 Yevgeniy B. Slutskiy and Chung-Heng Yeh</i></p><p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Identifying Dendritic Processing in a [Filter]-[Ideal IAF] neural circuit
 % This demo illustrates identification of the [Filter] in the
-% [Filter]-[Ideal IAF] circuit using bandlimited input signals, i.e.,
+% [Filter]-[Ideal IAF] circuit using band-limited input signals, i.e.,
 % signals that belong to the Paley-Wiener space.
 %
 % The code below corresponds to Corollary 3 in [1] and was used to generate
 % Figs. 4-6 in [1]. The employed filter was taken from [2].
 %
-% [1] A.A. Lazar and Y.B. Slutskiy, Identifying Dendritic Processing,
-% Advances in Neural Information Processing Systems 23, pp. 1261-1269, 2010
+% Author:               Yevgeniy B. Slutskiy <ys2146@columbia.edu>
 %
-% [2] E.H. Adelson and J R. Bergen, Spatiotemporal energy models for the
-% perception of motion, Journal of the Optical Society of America, Vol
-% 2(2),1985
-%
-% Author:               Yevgeniy B. Slutskiy
-%
-% Revision Author:      Chung-Heng Yeh
+% Revision Author:      Chung-Heng Yeh <chyeh@ee.columbia.edu>
+% 
+% Bionet Group, Columbia University
 %
 % Copyright 2010-2012   Yevgeniy B. Slutskiy and Chung-Heng Yeh
 
-
 %% Initialize the demo
-
-clc; clear all; close all;                  % Reset the Matlab workspace.
+clc; clear all; close all;                  % reset the Matlab workspace
+set(0,'defaulttextinterpreter','latex');    % set default text interpreter to latex
 
 tic_demo = tic;                             % start the demo timer
 tic_init = tic;                             % start the initialization timer
-
 dt = 5e-6;                                  % set the time step, [s]
-f = 25;                                     % set the input signal bandwidth, [Hz]
-W = 2*pi*f;                                 % calculate the bandwidth in [rad]
+
+% define function handle for displaying running time
+runtime = @(msg,time) display([msg num2str(floor(time/60)) ''' ' ...
+                      num2str(time - 60*floor(time/60), '%3.1f') '"']);
+
+%% Specify the filter h to be used
+% Generate a filter h according to Adelson and Bergen in [2]. h has a
+% temporal support on the interval [T_1, T_2]. The filter generated here
+% will be repeatedly used through this demo.
+
+T_1 = 0; T_2 = 0.1;                         % specify T_1 and T_2
+t_filt = T_1:dt:T_2;                        % set the length of the impulse response, [s]
+a = 200;                                    % set the filter parameter
+h = 3*a*exp(-a*t_filt).*((a*t_filt).^3/...
+    factorial(3)-(a*t_filt).^5/factorial(5));
+%%
+% Plot the filter
+figure('Name','Filter','Position',[0 0 600 300],'color','white');
+plot(t_filt, h);
+set(gca,'xlim',[0 0.1],'ylim',[-50 100],...
+    'xlabel',text('string','Time, [s]'),'ylabel',text('string','Amplitude'),...
+    'title',text('string','Impulse response $h(t)$ of the filter'));
+%% Create a band-limited stimulus. The bandwidth W = 2\pi*25 rad/s
+f  = 25;                                    % set the input signal bandwidth, [Hz]
+W  = 2*pi*f;                                % calculate the bandwidth in [rad]
 Ts = pi/W;                                  % calculate the sampling period in [s]
-t = 0:dt:1.12;                              % create a time vector for the input stimulus
+t  = 0:dt:1.12;                             % create a time vector for the input stimulus
 
-%% Create a bandlimited stimulus. The bandwidth W = 2\pi*25 rad/s
-
-randn('state', 19871127);                   % fix the state of randn() for reproducible results
+rng(19871127,'v5uniform');                  % set the state of random number generator
 u = zeros(1,length(t));                     % initialize the stimulus u(t)
 N_samp = floor((t(end)-t(1))/Ts);           % find the number of stimulus samples
 ukT = randn(1,N_samp);                      % use randomly generated signal samples (e.g., from a Gaussian distribution)
@@ -620,25 +560,10 @@ u = u/max(abs(u));                          % normalize the input signal
 %%
 % Plot the stimulus
 figure('Name','Input stimulus','Position',[0 0 600 300],'color','white');
-plot(t, u); title('Input stimulus $u(t)$','Interpreter','latex');
-axis([0 1 -1 1]); xlabel('Time, [s]','Interpreter','latex');
-ylabel('Amplitude','Interpreter','latex');
-%% Specify the filter h to be used
-% Generate a filter according to Adelson and Bergen in [2]. h has a
-% temporal support on the interval [T_1, T_2]
-
-T_1 = 0; T_2 = 0.1;                         % specify T_1 and T_2
-t_filt = T_1:dt:T_2;                        % set the length of the impulse reponse, [s]
-a = 200;                                    % set the filter parameter
-h = 3*a*exp(-a*t_filt).*((a*t_filt).^3/factorial(3)...
-    -(a*t_filt).^5/factorial(5));
-%%
-% Plot the filter
-figure('Name','Filter','Position',[0 0 600 300],'color','white');
-plot(t_filt, h); axis([0 0.1 -50 100]);
-xlabel('Time, [s]','Interpreter','latex');
-ylabel('Amplitude','Interpreter','latex');
-title('Impulse response $h(t)$ of the filter','Interpreter','latex');
+plot(t, u); 
+set(gca,'xlim',[0 1],'ylim',[-1 1],...
+    'xlabel',text('string','Time, [s]'),'ylabel',text('string','Amplitude'),...
+    'title',text('string','Input stimulus $u(t)$'));
 %% Compute the filter projection Ph
 % Ph is the projection of h onto the input signal space. It is the best
 % approximation of h that can be recovered.
@@ -646,188 +571,163 @@ title('Impulse response $h(t)$ of the filter','Interpreter','latex');
 t_Ph = t - (t(1)+t(end))/2;                 % get the time vector for Ph
 g = W/pi*sinc(W*t_Ph/pi);                   % calculate the sinc kernel g  
 Ph = dt*fftfilt(h,g);                       % find the projection Ph by convolving h with g
+idx = find( abs(t_Ph+0.05) < dt/2 ):...
+      find( abs(t_Ph-0.15) < dt/2 );        % need Ph only between [-0.05,0.15]
+t_Ph = t_Ph(idx);                           % truncate t_Ph
+Ph = Ph(idx);                               % truncate Ph
+h_long = zeros(size(t_Ph));                 % set zero-padded version of h
+h_long( find(abs(t_Ph-t_filt(1))<dt/2):... 
+        find(abs(t_Ph-t_filt(end))<dt/2)  ) = h; 
 %%
-% Plot the filter projection
-idx = find( t_Ph > -0.05 &  t_Ph < 0.15 );
 figure('Name','Filter projection','Position',[0 0 600 300],'color','white');
-plot(t_Ph(idx), Ph(idx));
-%axis([-0.05 0.15 -50 100]);
-axis([0 0.1 -50 100]); xlabel('Time, [s]','Interpreter','latex');
-ylabel('Amplitude','Interpreter','latex');
-title('Filter projection $\mathcal{P}h(t)$','Interpreter','latex');
-
+plot(t_Ph,h_long,'REPLACE_WITH_DASH_DASHk',t_Ph, Ph,'b');
+set(gca,'xlim',[0 0.1],'ylim',[-50 100],...
+    'xlabel',text('string','Time, [s]'),'ylabel',text('string','Amplitude'),...
+    'title',text('string','Filter $h(t)$ and Filter projection $\mathcal{P}h(t)$'));
+legend( '$h(t)$', '$\mathcal{P}h(t)$' );
 %% Filter the input signal u
 % Since all signals are finite, the filter output v=u*h is not calculated
-% propertly on the boundaries. v_proper is that part of v, for which the
+% properly on the boundaries. v_proper is that part of v, for which the
 % convolution of u and h is computed correctly.
 
 v = dt*fftfilt(h,u);                        % convolve u with h
 
 v_proper = v(length(h):end);                % get the proper part of v
-t_proper = t(length(h):end);                % get the correspoding time vector
+t_proper = t(length(h):end);                % get the corresponding time vector
 u_proper = u(length(h):end);                % get the corresponding stimulus
 %%
 % Plot the filter output
 figure('Name','Filter output v','Position',[0 0 600 300],'color','white');
-plot(t,v); axis([0 1 -1.2 1.2]); xlabel('Time, [s]','Interpreter','latex');
-ylabel('Amplitude','Interpreter','latex');
-title('Filter output $v(t)$','Interpreter','latex');
+plot(t,v);
+set(gca,'xlim',[0 1],'ylim',[-1.2 1.2],'xlabel',text('string','Time, [s]'),...
+    'ylabel',text('string','Amplitude'),'title',text('string','Filter output $v(t)$'));
 %% Encode the filter output v=u*h with an IAF neuron
 % Specify parameters of the Ideal IAF neuron
 delta = 0.007;                              % set the threshold
 bias  = 0.28;                               % set the bias
-kappa = 1;                                  % set capacitance
+kappa = 1;                                  % set the capacitance
 
 [spk_train vol_trace] = ideal_iaf_encode(v_proper,t_proper,bias,delta,kappa);
 
-timer = toc(tic_init);                     	% get the initialization time
-display(['Initialization time: ' num2str(floor(timer/60)) ''' ' num2str(timer - 60*floor(timer/60), '%3.1f') '"']);  
+timer = toc(tic_init);                      % get the initialization time
+runtime('Initialization time: ',timer);     % display the initialization time 
 %%
 % Plot the voltage trace and the associated spike train
 figure('Name','Neural circuit output','Position',[0 0 600 300],'color','white');
-subplot(7,1,1:5);
-    plot([0 t_proper(end)-t_proper(1)], [delta delta], 'REPLACE_WITH_DASH_DASHr'); hold on;
-    plot(t_proper-t_proper(1),vol_trace,'b-'); 
-    plot(spk_train-t_proper(1), delta*ones(size(spk_train)), 'r.');
-    h_legend = legend(['Threshold $\delta=' num2str(delta) '$'], 'Membrane voltage $v\quad$', '$v(t)=\delta$', 'location','East');
-    set(h_legend, 'interpreter','latex'); axis([0 1 min(vol_trace) delta*1.1]);
-    set(gca,'xticklabel',[]); ylabel('Amplitude','Interpreter','latex');
-    title('Output of the [Filter]-[Ideal IAF] neural circuit','Interpreter','latex');
-subplot(7,1,6:7);
-    stem(spk_train-t_proper(1),	ones(size(spk_train)), '^k', 'filled');
-    set(gca,'yticklabel',[]); set(gca,'ytick',[]); axis([0 1 0 1.1]);
-    xlabel('Time, [s]','Interpreter','latex');
-    h_legend = legend('$(t_k)_{k\in Z}$', 'location','East');
-    set(h_legend, 'interpreter','latex');
-
+    set(subplot(7,1,1:5),'xlim',[0 1],'ylim',[min(vol_trace) delta*1.1],'box','on',...
+        'xticklabel',[],'ylabel',text('string','Amplitude'),...
+        'title',text('string','Output of the [Filter]-[Ideal IAF] neural circuit'));
+        hold on;
+        plot([0 t_proper(end)-t_proper(1)], [delta delta], 'REPLACE_WITH_DASH_DASHr',...
+              t_proper-t_proper(1),vol_trace,'b-',...
+              spk_train-t_proper(1), delta*ones(size(spk_train)),'ro','MarkerfaceColor','r');
+        legend(['Threshold $\delta=' num2str(delta) '$'],...
+                'Membrane voltage $v\qquad$', '$v(t)=\delta$', 'location','East');
+    set(subplot(7,1,6:7),'xlim',[0 1],'ylim',[0 1.1],'box','on',...
+        'yticklabel',[],'ytick',[],'xlabel',text('string','Time, [s]'));
+        hold on;
+        stem(spk_train-t_proper(1), ones(size(spk_train)), '^k', 'filled');
+        legend('$(t_k)_{k\in Z}$', 'location','East');
 %% Identify the filter projection Ph
 % Since the temporal support of the filter h is not known, we identify the
 % projection Ph in a window W = [tau_1, tau_2]. Temporal windows W^i of
-% spikes can be chose arbitrarily. Here we pick W^i so that the
+% spikes can be chosen arbitrarily. Here we pick W^i so that the
 % Nyquist-type condition on the density of spikes is achieved quickly (see
 % also Theorem 1 and Remark 1 in [1]).
 
 T_filt_rec = 0.12;                          % specify the hypothesized length of the implulse response 
 tau_1 = -(T_filt_rec - t_filt(end))/2;      % get tau_1 and tau_2. Here W is centered around the actual
 tau_2 = t_filt(end)-tau_1;                  % temporal support T_2-T_1
-N_max = 10;                                 % set the maximum number of windows to be used (could be smaller depending on the simulation)
-
+N_max = 10;                                 % set the maximum number of windows to be used 
+                                            % (could be smaller depending on the simulation)
 tic_CIM = tic;                              % start the algorithm timer
-[h_hat windows] = identify_h_ideal_iaf(dt, t_Ph, t_proper, u_proper, W, bias, delta, kappa,...
+[h_hat windows] = identify_h_ideal_iaf(dt, t_Ph, t_proper, u_proper, W,...
+                                       bias, delta, kappa,...
                                        spk_train, tau_1, tau_2, N_max);
 
 timer = toc(tic_CIM);                       % stop the algorithm timer
-display(['CIM running time: ' num2str(floor(timer/60)) ''' ' num2str(timer - 60*floor(timer/60), '%3.1f') '"']);  
-
-
+runtime('CIM running time: ',timer);        % display execution time
 %% Generate Fig. 4 of [1]
-
 figure('Name','NIPS 2010 Fig. 4','Position',[0 0 1440 1080],'color','white')
-    
     % plot the input stimulus u
-    subplot(321);
-        plot(t_proper - t_proper(1), u_proper);
-        title('$(a)\qquad$Input signal u(t)','Interpreter','latex');
-        h_legend = legend(['$\Omega = 2\pi\cdot$' num2str(f) 'rad/s$\qquad$']); set(h_legend,'Interpreter','latex');
-        axis([0 1 -1 1]); ylabel('Amplitude','interpreter','latex');
-    
+    set(subplot(3,2,1),'xlim',[0 1],'ylim',[-1 1],'box','on',...
+        'ylabel',text('string','Amplitude'),...
+        'title',text('string','$(a)\qquad$Input signal u(t)'));
+        hold on;plot(t_proper - t_proper(1), u_proper);
+        legend(['$\Omega = 2\pi\cdot$' num2str(f) 'rad/s$\qquad$']);
     % plot the spike train tk of the IAF neuron and windows W^i
-    subplot(323);
-        N = length(windows);
-        D = bias*kappa/delta; 
-        stem(spk_train(1)-t_proper(1), 1.1, '^k', 'filled');
-        base_palette = 'crgbym';
-        palette = zeros(1,N);
-        for j=1:N
-            palette(j) = char( base_palette( mod(j,6) + 1 ) );
-            x = [windows{j}(1) windows{j}(end) windows{j}(end) windows{j}(1)] - t_filt(end);
-            y = [1e-2 1e-2 1.2-1e-2 1.2-1e-2]; patch(x,y,base_palette(mod(j,6)+1),'facealpha',1,'line','none'); hold on;
+    set(subplot(323),'xlim',[0 1],'ylim',[0 1.2],'box','on',...
+        'yticklabel',[],'ytick',[],...
+        'title',text('string','$(b)\qquad$Output of the [Filter]-[Ideal IAF] neural circuit'));
+        N = numel(windows);        % get the number of windows
+        D = bias*kappa/delta;      % compute the Nyquist rate
+        cs = colormap(hsv(N+1));   % set the color map
+        hold on;stem(spk_train-t_proper(1), 1.1*ones(size(spk_train)), '^k', 'filled');
+        for i=1:N
+            x = [windows{i}(1) windows{i}(end) windows{i}(end) windows{i}(1)] - t_filt(end);
+            y = [1e-2 1e-2 1.2-1e-2 1.2-1e-2];
+            patch(x,y,cs(i,:),'facealpha',1,'line','none');hold on; 
         end
         stem(spk_train-t_proper(1), 1.1*ones(size(spk_train)), '^k', 'filled');
-        hold on; box on; set(gca,'yticklabel',[]); set(gca,'ytick',[]);
-        title('$(b)\qquad$Output of the [Filter]-[Ideal IAF] neural circuit','Interpreter','latex'); 
-        h_legend = legend(['$D = ' num2str(D,'%3.0f') '\;$Hz'],['Windows $\{W^i\}_{i=1}^{' num2str(N) '}\quad$'],'Location','East');
-        set(h_legend,'Interpreter','latex'); 
-        axis([0 1 0 1.2]);
-     
+        legend(['$D = ' num2str(D,'%3.0f') '\;$Hz'],...
+               ['Windows $\{W^i\}_{i=1}^{' num2str(N) '}\quad$'],'Location','East');
     % plot h, Ph and h_hat (the filter identified by the algorithm)
-    subplot(325);
-        
-        % h_long is a zero-padded version of h (of the same size as t_Ph)
-        h_long = zeros(size(t_Ph));   
-        h_long( find(abs(t_Ph-t_filt(1))<dt/2): find(abs(t_Ph-t_filt(end))<dt/2)  ) = h; 
-
-        t_frame_start = tau_1; t_frame_end = tau_2;                 % specify the temporal window on which to compute the MSE
-        t_frame_i = (t_Ph>=t_frame_start) & (t_Ph<=t_frame_end);    % find indices of t for the given frame t
-        
+    set(subplot(325),'xlim',[-0.05 0.15],'ylim',[-50 100],'box','on',...
+        'xlabel',text('string','Time, [s]'),'ylabel',text('string','Amplitude'),...
+        'title',text('string','$(c)\qquad$Original filter vs. the identified filter'));
+        % find indices of t for the given temporal window on which to compute the MSE
+        idx = (t_Ph>=tau_1) & (t_Ph<=tau_2);
         % Normalized RMSE between h and h_hat
-        h_hhat_err   = abs(h_long-h_hat)/max(abs(h_long));          % compute the absolute error 
-        h_hhat_RMSE  = sqrt(dt*trapz(h_hhat_err(t_frame_i).^2)/ ... % compute the RMSE
-                       (length(t_frame_i)*dt));
-                   
+        h_hhat_err   = abs(h_long-h_hat)/max(abs(h_long));                % compute the absolute error 
+        h_hhat_RMSE  = sqrt(dt*trapz(h_hhat_err(idx).^2)/(tau_2-tau_1));  % compute the RMSE
         % Normalized RMSE between Ph  and h_hat
-        Ph_hhat_err  = abs(Ph-h_hat)/max(abs(Ph));                  % compute the absolute error
-        Ph_hhat_RMSE = sqrt(dt*trapz(Ph_hhat_err(t_frame_i).^2)/ ...% compute the RMSE
-                       (length(t_frame_i)*dt)); 
-    
-        plot(t_Ph, h_long,'REPLACE_WITH_DASH_DASHk',t_Ph, Ph,'-b',t_Ph,h_hat,'-r');
-        h_title = title('$(c)\qquad$Original filter vs. the identified filter','Interpreter','latex');
-        h_legend = legend(['$h,\,$RMSE$(\hat{h},h)$ =' num2str(h_hhat_RMSE, '%3.2e') '$\quad$'],...
-                   ['$\mathcal{P}h,\,$RMSE$(\hat{h},\mathcal{P}h)$ =' num2str(Ph_hhat_RMSE, '%3.2e') '$\qquad$'],...
-                   '$\hat{h}$','Location','NorthEast');
-        set(h_legend,'Interpreter','latex');
-        axis([-0.05 0.15 -50 100]);
-        ylabel('Amplitude','interpreter','latex'); xlabel('Time, [s]','interpreter','latex');
-
-
+        Ph_hhat_err  = abs(Ph-h_hat)/max(abs(Ph));                        % compute the absolute error
+        Ph_hhat_RMSE = sqrt(dt*trapz(Ph_hhat_err(idx).^2)/(tau_2-tau_1)); % compute the RMSE; 
+        hold on;plot(t_Ph, h_long,'REPLACE_WITH_DASH_DASHk',t_Ph, Ph,'-b',t_Ph,h_hat,'-r');
+        legend(['$h,\,$RMSE$(\hat{h},h)$ =' num2str(h_hhat_RMSE, '%3.2e') '$\quad$'],...
+               ['$\mathcal{P}h,\,$RMSE$(\hat{h},\mathcal{P}h)$ =', num2str(Ph_hhat_RMSE, '%3.2e') '$\qquad$'],...
+               '$\hat{h}$','Location','NorthEast');
     % plot the periodogram power spectrum estmate of u
-    subplot(322);
-       	Fs = 1/dt;                                          % get the sampling frequency
-        h_spctr = spectrum.periodogram('hamming');          % use a spectral estimator with a hamming window    
-
-        hopts = msspectrumopts(h_spctr,u_proper); set(hopts,'Fs',Fs,'SpectrumType','onesided','centerdc',true);
+    set(subplot(3,2,2),'xlim',[-150 150],'ylim',[-100 0],'box','on',...
+        'ylabel',text('string','Power, [dB]'),...
+        'title',text('string','$(d)\qquad$Periodogram Power Spectrum Estimate of u(t)'));
+        h_spctr = spectrum.periodogram('hamming');           
+        hopts = msspectrumopts(h_spctr,u_proper); 
+        set(hopts,'Fs',1/dt,'SpectrumType','onesided','centerdc',true);
         Hmss = msspectrum(h_spctr,u_proper,hopts);
-        plot(Hmss.frequencies,10*log10(Hmss.data)); axis([-150 150 -100 0]); grid on;
-        h_title = title(''); set(h_title,'Interpreter','latex'); title('$(d)\qquad$Periodogram Power Spectrum Estimate of u(t)');
-        ylabel('Power, [dB]','interpreter','latex');
-        h_legend = legend('supp$(\mathcal{F}u)=[-\Omega,\Omega]\qquad$');
-        set(h_legend,'Interpreter','latex');
-        
-  	% plot the periodogram power spectrum estmate of h
-    subplot(324);
+        hold on;plot(Hmss.frequencies,10*log10(Hmss.data));grid on;
+        legend('supp$(\mathcal{F}u)=[-\Omega,\Omega]\qquad$');
+    % plot the periodogram power spectrum estmate of h
+    set(subplot(3,2,4),'xlim',[-150 150],'ylim',[-100 0],'box','on',...
+        'ylabel',text('string','Power, [dB]'),...
+        'title',text('string','$(e)\qquad$Periodogram Power Spectrum Estimate of h(t)'));
         h_temp = zeros(size(t_proper));
         h_temp(1:length(h)) = h;
-        hopts = msspectrumopts(h_spctr,h_temp); set(hopts,'Fs',Fs,'SpectrumType','onesided','centerdc',true);
+        hopts = msspectrumopts(h_spctr,h_temp); 
+        set(hopts,'Fs',1/dt,'SpectrumType','onesided','centerdc',true);
         Hmss = msspectrum(h_spctr,h_temp,hopts);
-        plot(Hmss.frequencies,10*log10(Hmss.data)); axis([-150 150 -100 0]); grid on;
-        h_title = title(''); set(h_title,'Interpreter','latex'); title('$(e)\qquad$Periodogram Power Spectrum Estimate of h(t)');
-        ylabel('Power, [dB]','interpreter','latex');
-        h_legend = legend('supp$(\mathcal{F}h)\supset[-\Omega,\Omega]\qquad$');
-        set(h_legend,'Interpreter','latex');
-        
+        hold on;plot(Hmss.frequencies,10*log10(Hmss.data));grid on;
+        legend('supp$(\mathcal{F}h)\supset[-\Omega,\Omega]\qquad$');
     % plot the periodogram power spectrum estmate of v=u*h
-    subplot(326);
-        hopts = msspectrumopts(h_spctr,v_proper); set(hopts,'Fs',Fs,'SpectrumType','onesided','centerdc',true);
+    set(subplot(3,2,6),'xlim',[-150 150],'ylim',[-100 0],'box','on',...
+        'xlabel',text('string','Frequency, [Hz]'),...
+        'ylabel',text('string','Power, [dB]'),...
+        'title',text('string','$(f)\qquad$Periodogram Power Spectrum Estimate of v(t)'));
+        hopts = msspectrumopts(h_spctr,v_proper); 
+        set(hopts,'Fs',1/dt,'SpectrumType','onesided','centerdc',true);
         Hmss = msspectrum(h_spctr,v_proper,hopts);
-        plot(Hmss.frequencies,10*log10(Hmss.data)); axis([-150 150 -100 0]); grid on;
-        h_title = title(''); set(h_title,'Interpreter','latex'); title('$(f)\qquad$Periodogram Power Spectrum Estimate of v(t)');
-        xlabel('Frequency, [Hz]','interpreter','latex'); ylabel('Power, [dB]','interpreter','latex');
-        h_legend = legend('supp$(\mathcal{F}v)=[-\Omega,\Omega]\qquad$');
-        set(h_legend,'Interpreter','latex');
-                
+        hold on;plot(Hmss.frequencies,10*log10(Hmss.data));grid on;
+        legend('supp$(\mathcal{F}v)=[-\Omega,\Omega]\qquad$');
 %% Generate Fig. 5 of [1]
 % The follwoing procedures are same as above except that the input stimulus 
 % is now bandlimited to 100Hz.
-
-dt = 1e-6;                                  % set the time step, [s]
-f = 100;                                    % set the input signal bandwidth, [Hz]
-W = 2*pi*f;                                 % calculate the bandwidth in [rad]
+f  = 100;                                   % set the input signal bandwidth, [Hz]
+W  = 2*pi*f;                                % calculate the bandwidth in [rad]
 Ts = pi/W;                                  % calculate the sampling period in [s]
-t = 0:dt:1.52;                              % create a time vector for the input stimulus
-
+t  = 0:dt:2.12;                             % create a time vector for the input stimulus
 %%
 % Create a bandlimited stimulus. The bandwidth W = 2\pi*100 rad/s
-randn('state', 19871127);                   % fix the state of randn() for reproducible results
+rng(19871127,'v5uniform');                  % fix the state of random number generator for reproducible result
 u = zeros(1,length(t));                     % initialize the stimulus u(t)
 N_samp = floor((t(end)-t(1))/Ts);           % find the number of stimulus samples
 ukT = randn(1,N_samp);                      % use randomly generated signal samples (e.g., from a Gaussian distribution)
@@ -836,22 +736,15 @@ for k=1:N_samp
     u = u + ukT(k)*sinc(W*(t-k*Ts)/pi);     % the first sample is zero
 end
 u = u/max(abs(u));                          % normalize the input signal
-
-%%
-% Specify the filter h to be used
-
-T_1 = 0; T_2 = 0.1;                         % specify T_1 and T_2
-t_filt = T_1:dt:T_2;                        % set the length of the impulse reponse, [s]
-a = 200;                                    % set the filter parameter
-h = 3*a*exp(-a*t_filt).*((a*t_filt).^3/factorial(3)...
-    -(a*t_filt).^5/factorial(5));
-
 %% 
 % Compute the filter projection Ph
 t_Ph = t - (t(1)+t(end))/2;                 % get the time vector for Ph
 g = W/pi*sinc(W*t_Ph/pi);                   % calculate the sinc kernel g  
 Ph = dt*fftfilt(h,g);                       % find the projection Ph by convolving h with g
-
+idx = find( abs(t_Ph+0.05) < dt/2 ):...
+      find( abs(t_Ph-0.15) < dt/2 );        % only need Ph between [-0.05,0.15]
+t_Ph = t_Ph(idx);                           % truncate t_Ph
+Ph = Ph(idx);                               % truncate Ph
 %% 
 % Filter the input signal u
 v = dt*fftfilt(h,u);                        % convolve u with h
@@ -859,8 +752,6 @@ v = dt*fftfilt(h,u);                        % convolve u with h
 v_proper = v(length(h):end);                % get the proper part of v
 t_proper = t(length(h):end);                % get the correspoding time vector
 u_proper = u(length(h):end);                % get the corresponding stimulus
-
-
 %%
 % Encode the filter output v=u*h with an IAF neuron
 delta = 0.007;                              % set the threshold
@@ -868,121 +759,93 @@ bias  = 0.28;                               % set the bias
 kappa = 1;                                  % set capacitance
 
 [spk_train vol_trace] = ideal_iaf_encode(v_proper,t_proper,bias,delta,kappa);
-
 %%
 % Identify the filter projection Ph
 T_filt_rec = 0.11;                          % specify the hypothesized length of the implulse response 
 tau_1 = -(T_filt_rec - t_filt(end))/2;      % get tau_1 and tau_2. Here W is centered around the actual
 tau_2 = t_filt(end)-tau_1;                  % temporal support T_2-T_1
-
-show_subpopulation = 0;                     % use this flag to show recovery results from subsets of N
-N_max = 10;                                 % set the maximum number of windows to be used (could be smaller depending on the simulation)
+N_max = 15;                                 % set the maximum number of windows to be used (could be smaller depending on the simulation)
 
 tic_CIM = tic;                              % start the algorithm timer
-[h_hat windows] = identify_h_ideal_iaf(dt, t_Ph, t_proper, u_proper, W, bias, delta, kappa,...
+[h_hat windows] = identify_h_ideal_iaf(dt, t_Ph, t_proper, u_proper, W,...
+                                       bias, delta, kappa,...
                                        spk_train, tau_1, tau_2, N_max);
 
 timer = toc(tic_CIM);                       % stop the algorithm timer
-display(['CIM running time: ' num2str(floor(timer/60)) ''' ' num2str(timer - 60*floor(timer/60), '%3.1f') '"']);  
-
-
-
-
-
+runtime('CIM running time: ',timer);        % display execution time
 %% 
 % Plot the results
-
 figure('Name','NIPS 2010 Fig. 5','Position',[0 0 1440 1080],'color','white')
-    
     % plot the input stimulus u
-    subplot(321);
-        plot(t_proper - t_proper(1), u_proper);
-        title('$(a)\qquad$Input signal u(t)','Interpreter','latex');
-        h_legend = legend(['$\Omega = 2\pi\cdot$' num2str(f) 'rad/s$\qquad$']); set(h_legend,'Interpreter','latex');
-        axis([0 1.4 -1 1]); ylabel('Amplitude','interpreter','latex');
-    
+    set(subplot(3,2,1),'xlim',[0 1.4],'ylim',[-1 1],'box','on',...
+        'ylabel',text('string','Amplitude'),...
+        'title',text('string','$(a)\qquad$Input signal u(t)'));
+        hold on;plot(t_proper - t_proper(1), u_proper);
+        legend(['$\Omega = 2\pi\cdot$' num2str(f) 'rad/s$\qquad$']);
     % plot the spike train tk of the IAF neuron and windows W^i
-    subplot(323);
-        N = length(windows);
-        D = bias*kappa/delta;
-        stem(spk_train(1)-t_proper(1), 1.1, '^k', 'filled');
-        base_palette = 'crgbym';
-        for j=1:N
-            x = [windows{j}(1) windows{j}(end) windows{j}(end) windows{j}(1)] - t_filt(end);
-            y = [1e-2 1e-2 1.2-1e-2 1.2-1e-2]; patch(x,y,base_palette(mod(j,6)+1),'facealpha',1,'line','none'); hold on;
+    set(subplot(323),'xlim',[0 1.4],'ylim',[0 1.2],'box','on',...
+        'yticklabel',[],'ytick',[],...
+        'title',text('string','$(b)\qquad$Output of the [Filter]-[Ideal IAF] neural circuit'));
+        N = numel(windows);      % get the number of windows
+        D = bias*kappa/delta;    % compute the Nyquist rate
+        cs = colormap(hsv(N+1)); % set the color map
+        hold on;stem(spk_train-t_proper(1), 1.1*ones(size(spk_train)), '^k', 'filled');
+        for i=1:10
+            x = [windows{i}(1) windows{i}(end) windows{i}(end) windows{i}(1)] - t_filt(end);
+            y = [1e-2 1e-2 1.2-1e-2 1.2-1e-2];
+            patch(x,y,cs(i,:),'facealpha',1,'line','none');hold on; 
         end
         stem(spk_train-t_proper(1), 1.1*ones(size(spk_train)), '^k', 'filled');
-        hold on; box on; set(gca,'yticklabel',[]); set(gca,'ytick',[]);
-        title('$(b)\qquad$Output of the [Filter]-[Ideal IAF] neural circuit','Interpreter','latex'); 
-        h_legend = legend(['$D = ' num2str(D,'%3.0f') '\;$Hz'],['Windows $\{W^i\}_{i=1}^{' num2str(N) '}\quad$'],'Location','East');
-        set(h_legend,'Interpreter','latex'); 
-        axis([0 1.4 0 1.2]);
-     
+        legend(['$D = ' num2str(D,'%3.0f') '\;$Hz'],...
+               ['Windows $\{W^i\}_{i=1}^{' num2str(N) '}\quad$'],'Location','East');
     % plot h, Ph and h_hat (the filter identified by the algorithm)
-    subplot(325);
-        
-        % h_long is a zero-padded version of h (of the same size as t_Ph)
-        h_long = zeros(size(t_Ph));   
-        h_long( find(abs(t_Ph-t_filt(1))<dt/2): find(abs(t_Ph-t_filt(end))<dt/2)  ) = h; 
-
-        t_frame_start = tau_1; t_frame_end = tau_2;                 % specify the temporal window on which to compute the MSE
-        t_frame_i = (t_Ph>=t_frame_start) & (t_Ph<=t_frame_end);    % find indices of t for the given frame t
-        
+    set(subplot(325),'xlim',[-0.05 0.15],'ylim',[-50 100],'box','on',...
+        'xlabel',text('string','Time, [s]'),'ylabel',text('string','Amplitude'),...
+        'title',text('string','$(c)\qquad$Original filter vs. the identified filter'));
+ 
+        % find indices of t for the given temporal window on which to compute the MSE
+        idx = (t_Ph>=tau_1) & (t_Ph<=tau_2);
         % Normalized RMSE between h and h_hat
-        h_hhat_err   = abs(h_long-h_hat)/max(abs(h_long));          % compute the absolute error 
-        h_hhat_RMSE  = sqrt(dt*trapz(h_hhat_err(t_frame_i).^2)/ ... % compute the RMSE
-                       (length(t_frame_i)*dt));
-                   
+        h_hhat_err   = abs(h_long-h_hat)/max(abs(h_long));                % compute the absolute error 
+        h_hhat_RMSE  = sqrt(dt*trapz(h_hhat_err(idx).^2)/(tau_2-tau_1));  % compute the RMSE
         % Normalized RMSE between Ph  and h_hat
-        Ph_hhat_err  = abs(Ph-h_hat)/max(abs(Ph));                  % compute the absolute error
-        Ph_hhat_RMSE = sqrt(dt*trapz(Ph_hhat_err(t_frame_i).^2)/ ...% compute the RMSE
-                       (length(t_frame_i)*dt)); 
-    
-        plot(t_Ph, h_long,'REPLACE_WITH_DASH_DASHk',t_Ph, Ph,'-b',t_Ph,h_hat,'-r');
-        h_title = title('$(c)\qquad$Original filter vs. the identified filter','Interpreter','latex');
-        h_legend = legend(['$h,\,$RMSE$(\hat{h},h)$ =' num2str(h_hhat_RMSE, '%3.2e') '$\quad$'],...
-                   ['$\mathcal{P}h,\,$RMSE$(\hat{h},\mathcal{P}h)$ =' num2str(Ph_hhat_RMSE, '%3.2e') '$\qquad$'],...
-                   '$\hat{h}$','Location','NorthEast');
-        set(h_legend,'Interpreter','latex');
-        axis([-0.05 0.15 -50 100]);
-        ylabel('Amplitude','interpreter','latex'); xlabel('Time, [s]','interpreter','latex'); 
-
-
+        Ph_hhat_err  = abs(Ph-h_hat)/max(abs(Ph));                        % compute the absolute error
+        Ph_hhat_RMSE = sqrt(dt*trapz(Ph_hhat_err(idx).^2)/(tau_2-tau_1)); % compute the RMSE; 
+        hold on;plot(t_Ph, h_long,'REPLACE_WITH_DASH_DASHk',t_Ph, Ph,'-b',t_Ph,h_hat,'-r');
+        legend(['$h,\,$RMSE$(\hat{h},h)$ =' num2str(h_hhat_RMSE, '%3.2e') '$\quad$'],...
+               ['$\mathcal{P}h,\,$RMSE$(\hat{h},\mathcal{P}h)$ =' num2str(Ph_hhat_RMSE, '%3.2e') '$\qquad$'],...
+               '$\hat{h}$','Location','NorthEast');
     % plot the periodogram power spectrum estmate of u
-    subplot(322);
-       	Fs = 1/dt;                                          % get the sampling frequency
-        h_spctr = spectrum.periodogram('hamming');          % use a spectral estimator with a hamming window    
-
-        hopts = msspectrumopts(h_spctr,u_proper); set(hopts,'Fs',Fs,'SpectrumType','onesided','centerdc',true);
+    set(subplot(3,2,2),'xlim',[-150 150],'ylim',[-100 0],'box','on',...
+        'ylabel',text('string','Power, [dB]'),...
+        'title',text('string','$(d)\qquad$Periodogram Power Spectrum Estimate of u(t)'));
+        h_spctr = spectrum.periodogram('hamming');           
+        hopts = msspectrumopts(h_spctr,u_proper); 
+        set(hopts,'Fs',1/dt,'SpectrumType','onesided','centerdc',true);
         Hmss = msspectrum(h_spctr,u_proper,hopts);
-        plot(Hmss.frequencies,10*log10(Hmss.data)); axis([-150 150 -100 0]); grid on;
-        h_title = title(''); set(h_title,'Interpreter','latex'); title('$(d)\qquad$Periodogram Power Spectrum Estimate of u(t)');
-        ylabel('Power, [dB]','interpreter','latex');
-        h_legend = legend('supp$(\mathcal{F}u)=[-\Omega,\Omega]\qquad$');
-        set(h_legend,'Interpreter','latex');
-        
-  	% plot the periodogram power spectrum estmate of h
-    subplot(324);
+        hold on;plot(Hmss.frequencies,10*log10(Hmss.data));grid on;
+        legend('supp$(\mathcal{F}u)=[-\Omega,\Omega]\qquad$');
+    % plot the periodogram power spectrum estmate of h
+    set(subplot(3,2,4),'xlim',[-150 150],'ylim',[-100 0],'box','on',...
+        'ylabel',text('string','Power, [dB]'),...
+        'title',text('string','$(e)\qquad$Periodogram Power Spectrum Estimate of h(t)'));
         h_temp = zeros(size(t_proper));
         h_temp(1:length(h)) = h;
-        hopts = msspectrumopts(h_spctr,h_temp); set(hopts,'Fs',Fs,'SpectrumType','onesided','centerdc',true);
+        hopts = msspectrumopts(h_spctr,h_temp); 
+        set(hopts,'Fs',1/dt,'SpectrumType','onesided','centerdc',true);
         Hmss = msspectrum(h_spctr,h_temp,hopts);
-        plot(Hmss.frequencies,10*log10(Hmss.data)); axis([-150 150 -100 0]); grid on;
-        h_title = title(''); set(h_title,'Interpreter','latex'); title('$(e)\qquad$Periodogram Power Spectrum Estimate of h(t)');
-        ylabel('Power, [dB]','interpreter','latex');
-        h_legend = legend('supp$(\mathcal{F}h)\supset[-\Omega,\Omega]\qquad$');
-        set(h_legend,'Interpreter','latex');
-        
+        hold on;plot(Hmss.frequencies,10*log10(Hmss.data));grid on;
+        legend('supp$(\mathcal{F}h)\supset[-\Omega,\Omega]\qquad$');
     % plot the periodogram power spectrum estmate of v=u*h
-    subplot(326);
-        hopts = msspectrumopts(h_spctr,v_proper); set(hopts,'Fs',Fs,'SpectrumType','onesided','centerdc',true);
+    set(subplot(3,2,6),'xlim',[-150 150],'ylim',[-100 0],'box','on',...
+        'xlabel',text('string','Frequency, [Hz]'),...
+        'ylabel',text('string','Power, [dB]'),...
+        'title',text('string','$(f)\qquad$Periodogram Power Spectrum Estimate of v(t)'));
+        hopts = msspectrumopts(h_spctr,v_proper); 
+        set(hopts,'Fs',1/dt,'SpectrumType','onesided','centerdc',true);
         Hmss = msspectrum(h_spctr,v_proper,hopts);
-        plot(Hmss.frequencies,10*log10(Hmss.data)); axis([-150 150 -100 0]); grid on;
-        h_title = title(''); set(h_title,'Interpreter','latex'); title('$(f)\qquad$Periodogram Power Spectrum Estimate of v(t)');
-        xlabel('Frequency, [Hz]','interpreter','latex'); ylabel('Power, [dB]','interpreter','latex');
-        h_legend = legend('supp$(\mathcal{F}v)=[-\Omega,\Omega]\qquad$');
-        set(h_legend,'Interpreter','latex');
-        
+        hold on;plot(Hmss.frequencies,10*log10(Hmss.data));grid on;
+        legend('supp$(\mathcal{F}v)=[-\Omega,\Omega]\qquad$');
         
 %% Generate Fig. 6 of [1]
 % In Fig. 6a we plot the mean square error (MSE) between the filter
@@ -992,50 +855,36 @@ figure('Name','NIPS 2010 Fig. 5','Position',[0 0 1440 1080],'color','white')
 % In Fig. 6b we plot the mean square error (MSE) between the original
 % filter h and the identified filter h_hat as a function of the input
 % signal bandwidth
-
-
-% The following simulation is somewhat time-consuming (10 min). Use the
-% flag below to specify whether or not to generate the figure.
-Generate_Figure6 = 1;
-
-if Generate_Figure6 == 1
     
 Fig6_tic = tic;                             % initialize the timer
 
-dt = 5e-6;                                  % set the time step, [s]
 f = 100;                                    % set the input signal bandwidth, [Hz]
 W = 2*pi*f;                                 % calculate the bandwidth in [rad]
 Ts = pi/W;                                  % calculate the sampling period in [s]
 t = 0:dt:8.5;                               % create a time vector for the input stimulus
-
-
 %%
 % Create a bandlimited stimulus. The bandwidth W = 2\pi*100 rad/s
-randn('state', 19871127);                   % fix the state of randn() for reproducible results
+rng(19871127,'v5uniform');                  % set the state of random number generator
 u = zeros(1,length(t));                     % initialize the stimulus u(t)
 N_samp = floor((t(end)-t(1))/Ts);           % find the number of stimulus samples
 ukT = randn(1,N_samp);                      % use randomly generated signal samples (e.g., from a Gaussian distribution)
 
-for k=1:N_samp
-    u = u + ukT(k)*sinc(W*(t-k*Ts)/pi);     % the first sample is zero
-end
-u = u/max(abs(u));                          % normalize the input signal
-
-%%
-% Specify the filter h to be used
-
-T_1 = 0; T_2 = 0.1;                         % specify T_1 and T_2
-t_filt = T_1:dt:T_2;                        % set the length of the impulse reponse, [s]
-a = 200;                                    % set the filter parameter
-h = 3*a*exp(-a*t_filt).*((a*t_filt).^3/factorial(3)...
-    -(a*t_filt).^5/factorial(5));
-
+% We use another faster method to create stimulus. The idea is to pass the
+% samples, ukT, of the stimulus through a low pass filter (LPF).
+u( (1:N_samp)*round(Ts/dt)+1 ) = ukT;       % set sample train
+t_sinc = -t(end):dt:t(end);                 % set time course of the LFP
+u = fftfilt(u, sinc(t_sinc/Ts)/Ts);         % pass samples through the LFP
+u = u(end-length(t)+1:end);                 % get the proper part of u
+u = u/max(abs(u));                          % normalize the stimulus
 %% 
 % Compute the filter projection Ph
 t_Ph = t - (t(1)+t(end))/2;                 % get the time vector for Ph
 g = W/pi*sinc(W*t_Ph/pi);                   % calculate the sinc kernel g  
 Ph = dt*fftfilt(h,g);                       % find the projection Ph by convolving h with g
-
+idx = find( abs(t_Ph+0.05) < dt/2 ):...
+      find( abs(t_Ph-0.15) < dt/2 );        % only need Ph between [-0.05,0.15]
+t_Ph = t_Ph(idx);                           % truncate t_Ph
+Ph = Ph(idx);                               % truncate Ph
 %% 
 % Filter the input signal u
 v = dt*fftfilt(h,u);                        % convolve u with h
@@ -1043,99 +892,84 @@ v = dt*fftfilt(h,u);                        % convolve u with h
 v_proper = v(length(h):end);                % get the proper part of v
 t_proper = t(length(h):end);                % get the correspoding time vector
 u_proper = u(length(h):end);                % get the corresponding stimulus
-
 %%
 % Get data for Fig. 6a
 %
 % To demonstrate how the MSE changes as a function of the neuron spike
 % density D, we encode the input signal with an IAF neuron having a
 % different bias b = D*delta/kappa.
-Fig6a_tic = tic;                            % initialize the timer
+Fig6a_tic = tic;                            % initialize the timer for Fig.6a
 
 D = [20 40 60];                             % set the average spiking density
-MSE_palette = 'kbr';                        % set the color palette for plotting
 MSE_N = cell(3,1);                          % initialize the MSE cell
 N_max = 30;                                 % set the maximum number of windows to be used
-
-t_frame_start = tau_1; t_frame_end = tau_2;                 % specify the temporal window on which to compute the MSE
-t_frame_i = (t_Ph>=t_frame_start) & (t_Ph<=t_frame_end);    % find indices of t for the given frame t
 
 T_filt_rec = 0.11;                          % specify the hypothesized length of the implulse response 
 tau_1 = -(T_filt_rec - t_filt(end))/2;      % get tau_1 and tau_2. Here W is centered around the actual
 tau_2 = t_filt(end)-tau_1;                  % temporal support T_2-T_1
-
-show_all_windows = 0;                       % use this flag to show recovery from individual windows
-show_MSE_N = 1;                             % use this flag to show error as a function of the number of windows N
+idx = (t_Ph>=tau_1) & (t_Ph<=tau_2);        % find indices of t for the given temporal window on which to compute the MSE
 
 for counter = 1:length(D)
-    
-    bias  = D(counter)*delta/kappa;         % set the bias
+    d     = D(counter); 
     delta = 0.007;                          % set the threshold
     kappa = 1;                              % set capacitance
-    
+    bias  = d*delta/kappa;                  % set the bias
     % Encode the filter output v=u*h with an IAF neuron
     [spk_train vol_trace] = ideal_iaf_encode(v_proper,t_proper,bias,delta,kappa);
     
     % Identify the filter projection Ph, calculate MSE as a function of N
     [h_hat windows h_hat_N] ...
         = identify_h_ideal_iaf(dt, t_Ph, t_proper, u_proper, W, bias,...
-        delta, kappa, spk_train, tau_1, tau_2,...
-        N_max,'Calc_MSE_N',true);
+          delta, kappa, spk_train, tau_1, tau_2, N_max,'Calc_MSE_N',true);
+      
     N = length(windows);
     % Compute the normalized MSE
     MSE_N{counter} = zeros(1,N);
     for i=1:N
         % Normalized RMSE error for Ph - h_hat
         Ph_hhat_err  = abs(Ph-h_hat_N(i,:))/max(abs(Ph));
-        Ph_hhat_RMSE = sqrt(dt*trapz(Ph_hhat_err(t_frame_i).^2)/ ...
-            (length(t_frame_i)*dt));
+        Ph_hhat_RMSE = sqrt(dt*trapz(Ph_hhat_err(idx).^2)/(tau_2-tau_1));
         MSE_N{counter}(i) = 10*log10( Ph_hhat_RMSE^2 );
     end
 end
 
-timer = toc(Fig6a_tic);
-display(['Fig. 6a time: ' num2str(floor(timer/60)) ''' ' num2str(timer - 60*floor(timer/60), '%3.1f') '"']);
-
+timer = toc(Fig6a_tic);                     % stop the timer for Fig.6a
+runtime('Fig. 6a time: ',timer);            % display the running time for Fig.6a
 %%
 % Get data for Fig. 6b
 %
 % In the following, for fixed number of windows N, we compute the MSE
 % between the original filter h and the identified filter h_hat as a
 % function of the input signal bandwidth
-Fig6b_tic = tic;                            % initialize the timer
+Fig6b_tic = tic;                            % initialize the timer for Fig.6b
         
-f = 10:10:150;                             	% specify the bandwidth vector
+f = 10:10:150;                              % specify the bandwidth vector
 t = 0:dt:1.52;                              % specify the time vector
 N = 10;                                     % set the number of windows
 
 % specify Ideal IAF neuron parameters
-delta = 0.007;                             	% set the threshold
-bias  = 0.42;                              	% set the bias
+delta = 0.007;                              % set the threshold
+bias  = 0.42;                               % set the bias
 kappa = 1;                                  % set the capacitance
 
-
+t_Ph = -0.05:dt:0.15;
+idx = (t_Ph>=tau_1) & (t_Ph<=tau_2);
 MSE_BW = zeros(1,length(f));
-    
-for counter = 1:length(f)
-    W   = 2*pi*f(counter);                 	% calculate the bandwidth in [rad]
-    Ts  = pi/W;                            	% calculate the sampling period in [s]
+t_sinc = -t(end):dt:t(end);                 % set time course of the LFP
+for i = 1:length(f)
+    W   = 2*pi*f(i);                        % calculate the bandwidth in [rad]
+    Ts  = pi/W;                             % calculate the sampling period in [s]
     
     
     % Create a bandlimited signal
-    randn('state', 19871127);               % fix the state of randn() for reproducible results
+    rng(19871127,'v5uniform');              % set the state of random number generator
     u = zeros(1,length(t));                 % initialize the stimulus u(t)
     N_samp = floor((t(end)-t(1))/Ts);       % find the number of stimulus samples
     ukT = randn(1,N_samp);                  % use randomly generated signal samples (e.g., from a Gaussian distribution)
-    
-    for k=1:N_samp
-        u = u + ukT(k)*sinc(W*(t-k*Ts)/pi);	% the first sample is zero
-    end
-    u = u/max(abs(u));                      % normalize the input signal
-    
-    % Compute the filter projection Ph
-    t_Ph = t - (t(1)+t(end))/2;             % get the time vector for Ph
-    g = W/pi*sinc(W*t_Ph/pi);               % calculate the sinc kernel g
-    Ph = dt*fftfilt(h,g);                   % find the projection Ph by convolving h with g
+    u( (1:N_samp)*round(Ts/dt)+1 ) = ukT;   % set sample train
+    u = fftfilt(u, sinc(t_sinc/Ts)/Ts);     % pass samples through the LFP
+    u = u(end-length(t)+1:end);             % get the proper part of u
+    u = u/max(abs(u));                      % normalize the stimulus
     
     % Filter the input signal u
     v = dt*fftfilt(h,u);                    % convolve u with h
@@ -1149,69 +983,67 @@ for counter = 1:length(f)
     
     % Identify the filter projection
     h_hat = identify_h_ideal_iaf(dt, t_Ph, t_proper, u_proper, W, bias, delta,...
-        kappa, spk_train, tau_1, tau_2, N_max);
-    
-    % Compute the MSE
-    % h_long is a zero-padded version of h (of the same size as t_Ph)
-    h_long = zeros(size(t_Ph));
-    h_long( find(abs(t_Ph-t_filt(1))<dt/2): find(abs(t_Ph-t_filt(end))<dt/2)  ) = h;
-    
-    
-    t_frame_start = tau_1; t_frame_end = tau_2;                 % specify the temporal window on which to compute the MSE
-    t_frame_i = (t_Ph>=t_frame_start) & (t_Ph<=t_frame_end);    % find indices of t for the given frame t
-    
-    
+                                 kappa, spk_train, tau_1, tau_2, N_max);
     
     % Normalized RMSE between h and h_hat
-    h_hhat_err   = abs(h_long-h_hat)/max(abs(h_long));          % compute the absolute error
-    h_hhat_RMSE  = sqrt(dt*trapz(h_hhat_err(t_frame_i).^2)/ ... % compute the RMSE
-        (length(t_frame_i)*dt));
+    h_hhat_err   = abs(h_long-h_hat)/max(abs(h_long));               % compute the absolute error
+    h_hhat_RMSE  = sqrt(dt*trapz(h_hhat_err(idx).^2)/(tau_2-tau_1)); % compute the RMSE
     
-    MSE_BW(counter) = 10*log10( h_hhat_RMSE ^2 );
+    MSE_BW(i) = 10*log10( h_hhat_RMSE ^2 );
 end
-timer = toc(Fig6b_tic);
-display(['Fig. 6b time: ' num2str(floor(timer/60)) ''' ' num2str(timer - 60*floor(timer/60), '%3.1f') '"']);
-
+timer = toc(Fig6b_tic);                     % stop the timer for Fig.6b
+runtime('Fig. 6b time: ',timer);            % display the running time for Fig.6b
 %%
 % Plot Fig. 6 of [1]
 figure('Name','NIPS 2010 Fig. 6','Position',[0 0 1200 800], 'color', 'white');
+    % MSE vs number of windows
+    set(subplot(211),'xlim',[0 30],'ylim',[-100 20],'box','on',...
+        'title',text('string','MSE$(\hat{h},\mathcal{P}h)$ vs. the Number of Temporal Windows'),...
+        'xlabel',text('string','Number of Windows $N$'),...
+        'ylabel',text('string','MSE$(\hat{h},\mathcal{P}h)$, [dB]'));
+        marker = 'osd'; marker_size = [5 5 7];MSE_palette = 'kbr';
+        for counter = 1:length(D)
+            hold on;
+            plot(1:length(MSE_N{counter}),MSE_N{counter}, ['-' MSE_palette(counter)],...
+                 'Marker', marker(counter), 'MarkerFaceColor', MSE_palette(counter),...
+                 'markersize', marker_size(counter));
+        end
+        for counter = 1:length(D)
+            hold on;plot([2*pi*100/(pi*D(counter)) 2*pi*100/(pi*D(counter))],...
+                         [-100 20],['REPLACE_WITH_DASH_DASH' MSE_palette(counter)]);
+        end
+        legend('$D = 20\;$Hz','$D = 40\;$Hz','$D = 60\;$Hz', '$\Omega/(\pi D_1)$',...
+               '$\Omega/(\pi D_2)$','$\Omega/(\pi D_3)$', 'Location','NorthEast');    
+    set(subplot(212),'xlim',[10 150],'ylim',[-70 0],'xtick',10:10:150,'box','on',...
+        'title',text('string','MSE$(\hat{h},h)$ vs. input signal bandwidth'),...
+        'xlabel',text('string','Input signal bandwidth $\Omega/(2\pi)$, [Hz]'),...
+        'ylabel',text('string','MSE$(\hat{h},h)$, [dB]'));
+        hold on; plot( f, MSE_BW, '-b','Marker', 'o', 'MarkerFaceColor', 'b', 'markersize', 5);
+        legend(['$D = 60\;$Hz, $N = ' num2str(N) '\quad$'],'Location','NorthEast');    
 
-subplot(211) % MSE vs number of windows
-    marker = 'osd';
-    marker_size = [5 5 7];
+timer = toc(Fig6_tic);                          % stop the timer for Fig.6
+runtime('Total Fig. 6 time: ',timer);           % display the running time for Fig.6
+%%
+% Finalize the demo.
+timer = toc(tic_demo);                          % stop the demo timer
+runtime('Demo time: ',timer);                   % display the demo time
+set(0,'defaulttextinterpreter','none')          % reset MATLAB latex interpreter
+%% Reference
+% [1] A.A. Lazar and Y.B. Slutskiy, Identifying Dendritic Processing,
+% Advances in Neural Information Processing Systems 23, pp. 1261-1269, 2010
+%
+% [2] E.H. Adelson and J R. Bergen, Spatiotemporal energy models for the
+% perception of motion, Journal of the Optical Society of America, Vol
+% 2(2),1985
 
-    for counter = 1:length(D)
-        plot(1:length(MSE_N{counter}),MSE_N{counter}, ['-' MSE_palette(counter)],...
-            'Marker', marker(counter), 'MarkerFaceColor', MSE_palette(counter), 'markersize', marker_size(counter)); hold on;
-    end
-    for counter = 1:length(D)
-        plot([2*pi*100/(pi*D(counter)) 2*pi*100/(pi*D(counter))], [-100 20], ...
-            ['REPLACE_WITH_DASH_DASH' MSE_palette(counter)]); hold on;
-    end
-    title('MSE$(\hat{h},\mathcal{P}h)$ vs. the Number of Temporal Windows','interpreter','latex');
-    xlabel('Number of Windows $N$','interpreter','latex');
-    ylabel('MSE$(\hat{h},\mathcal{P}h)$, [dB]','interpreter','latex');
-    h_legend = legend('$D = 20\;$Hz','$D = 40\;$Hz','$D = 60\;$Hz', '$\Omega/(\pi D_1)$', '$\Omega/(\pi D_2)$','$\Omega/(\pi D_3)$', 'Location','NorthEast');    
-    set(h_legend,'interpreter','latex');
+%%
+% _Author: Yevgeniy B. Slutskiy <ys2146@columbia.edu>_
+%%
+% _Revision Author: Chung-Heng Yeh <chyeh@ee.columbia.edu>_
+%%
+% _Bionet Group, Columbia University_
+%%
+% _Copyright 2012-2014 Yevgeniy B. Slutskiy and Chung-Heng Yeh_
 
-    axis([0 30 -100 20]);
-
-subplot(212)
-    plot( f, MSE_BW, '-b','Marker', 'o', 'MarkerFaceColor', 'b', 'markersize', 5);
-    h_title = title('MSE$(\hat{h},h)$ vs. input signal bandwidth','interpreter','latex');
-    xlabel('Input signal bandwidth $\Omega/(2\pi)$, [Hz]','interpreter','latex');
-    ylabel('MSE$(\hat{h},h)$, [dB]','interpreter','latex');
-    h_legend = legend(['$D = 60\;$Hz, $N = ' num2str(N) '\quad$'], ...
-                      'Location','NorthEast');    
-    set(h_legend,'interpreter','latex');
-    axis([10 150 -70 0]); set(gca,'xtick',10:10:150)
-    
-timer = toc(Fig6_tic);
-display(['Total Fig. 6 time: ' num2str(floor(timer/60)) ''' ' num2str(timer - 60*floor(timer/60), '%3.1f') '"']);
-
-end
-          
-timer = toc(tic_demo);                      	% stop the algorithm timer
-display(['Demo time: ' num2str(floor(timer/60)) ''' ' num2str(timer - 60*floor(timer/60), '%3.1f') '"']);
 ##### SOURCE END #####
 --></body></html>

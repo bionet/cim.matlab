@@ -88,8 +88,7 @@ function [Ph windows varargout] = ...
             break;
         end
     end
-
-
+    
     % Find and Remove windows that contain fewer than 2 spikes     
     idx = cellfun( @numel, tk_in_window ) < 2;
     tk_in_window = tk_in_window(~idx);
@@ -100,91 +99,92 @@ function [Ph windows varargout] = ...
     tk_in_window = tk_in_window(1:N);
     windows = windows(1:N);
 
+    % Compatue q of each window, and merge all q to a single vector
+    q_N = cell2mat(cellfun( @(x) k*d-b*diff(x), tk_in_window, 'UniformOutput',false))';
 
-    % Compute total number of spikes that are contained in temopral windows
-    num_tk = sum( cellfun(@numel,tk_in_window) );
+    % Compute T (Corollary 3 of [1])
+    T = (tau_1+tau_2)/2;
 
+    % Compute all t_k^j-tau+T (Corollary 3 of [1])
+    sk_N = cell2mat( cellfun( @(tk_in_win,win) tk_in_win(1:end-1)-mean(win)+T,...
+                     tk_in_window,windows,'UniformOutput',false));
 
-    % Comupte the matrix G_N
-
-    G_N = zeros(num_tk-numel(windows));   % initialize ensemble matrices G_N
-    q_N = zeros(num_tk-numel(windows),1); % initialize ensemble matrices q_N
-
-    shifted_u = zeros(size(t));
-    % build the matrix G_N column by column hence the integral of the shifted
-    % stimulus will only be computed once.
-    col_idx = 1;
-
-
-    for i = 1:N                 % column block index
-        % get the shift imposed by spikes from the window i
-        shift = round((tk_in_window{i} - windows{i}(1) + tau_1)/dt);
-        % for every column
-        for k_cntr=1:length(tk_in_window{i})-1              
-            if shift(k_cntr)>0
-                shifted_u = [zeros(1,shift(k_cntr)) u(1:end-shift(k_cntr))];
-            else
-                shifted_u = [u(abs(shift(k_cntr))+1:end) zeros(1,abs(shift(k_cntr)))];
-            end
-            % compute the integral of shifted stimulus
-            shifted_u_int = dt*cumtrapz(shifted_u);
-
-            % compute G_N, row block by row block
-            row_offset = 0;
-            for j=1:N
-               idx = round( ( tk_in_window{j} - t(1) ) / dt );
-               idx( idx<1 ) = 1;
-               idx( idx>length(t) ) = length(t);
-
-               % Read out the value from the integral of the shifted stimulus
-               G_N( row_offset+1:row_offset+numel(tk_in_window{j})-1, col_idx ) ...
-                   = diff( shifted_u_int(idx) );
-               row_offset = row_offset + numel(tk_in_window{j})-1;
-            end 
-            q_N(col_idx) = k*d - b*diff( tk_in_window{i}(k_cntr:k_cntr+1) );
-            col_idx = col_idx + 1;
-        end            
-    end
-
-    % Calculate ck_N    
-    ck_N = pinv(G_N)*q_N;                      
-
-
-    % Recover the filter
-    Ph = zeros(size(t_Ph));                
-    ck_counter = 1;
-    for j=1:N
-        for m=1:length(tk_in_window{j})-1
-            Ph = Ph + ck_N(ck_counter) .* W/ pi * ...
-                    sinc( W*(t_Ph - tk_in_window{j}(m) + windows{j}(1) - tau_1 )/pi);
-            ck_counter = ck_counter + 1;
+    % Initialize ensemble matrices G_N
+    G_N = zeros(numel(sk_N));
+    
+    % Compute the matrix G = [G1; G2; ...; GN] block by block. Each block 
+    % Gi = [G1i; G2i; ... Gki] associates with the spikes in the i-th 
+    % window. Entries of each row G1i are integrals of different shifted 
+    % version of u(t) on the same interval [t^i_k t^i_(k+1)]. To compute
+    % every entry efficiently, we calculate the integral of u(t), U(t), one 
+    % time, and find the integral of u(t-s) on [a b] by computing 
+    % U(b-s)-U(a-s). The above idea can be vectorized for entries of the 
+    % same row, since they have the same integral interval.
+    
+    int_u = cumtrapz(t,u);                  % compute the integral of u
+    row = 1;                                % initialize row index
+    for i = 1:N  
+        % get the lower bound of the first integral. Need to convert the
+        % domain from continuous value to discrete index.
+        low_idx = time2idx( tk_in_window{i}(1)-sk_N-t(1), dt, 1, numel(u) );
+        for k = 2:numel(tk_in_window{i})
+            % get the upper bound of the integral interval
+            up_idx = time2idx( tk_in_window{i}(k)-sk_N-t(1), dt, 1, numel(u) );
+            % compute the explicit integral
+            G_N(row,:) = int_u(up_idx)-int_u(low_idx);
+            % the upper bound becomes the lower of the next interval
+            low_idx = up_idx;              
+            row = row + 1;                 % update row index 
         end
     end
+    % Calculate ck_N    
+    ck_N = pinv(G_N,1e-7)*q_N;   
 
-
+    % Recover the filter
+    Ph = synsig(dt,t_Ph, ck_N, sk_N, W ); 
+    
     % If error as a function of the number of windows is requested
     if p.Results.Calc_MSE_N
         h_rec_N = zeros(N,length(t_Ph));
-        G_ix_end = length(tk_in_window{1}) - 1;     % get the end index of the population matrix for i=1
+        G_ix_end = cumsum( cellfun( @numel, tk_in_window ) - 1 );
         for i = 1:N-1
             % get the matrix G corresponding to first i windows
-            G = G_N(1:G_ix_end, 1:G_ix_end);    % get the matrix for a population of i neurons
-            q = q_N(1:G_ix_end);                % get the q_i
-            Ginv = pinv(G);                     % compute the pseudoinverse of G
-            ck = Ginv*q;                        % calculate cks
-
-            ck_counter = 1;
-            for j=1:i
-                for m=1:length(tk_in_window{j})-1
-                    h_rec_N(i,:) = h_rec_N(i,:) + ck(ck_counter)*W/pi*...
-                                   sinc(W*(t_Ph - tk_in_window{j}(m) + windows{j}(1) - tau_1 )/pi);
-                    ck_counter = ck_counter + 1;
-                end
-             end
-             G_ix_end = G_ix_end + length(tk_in_window{i+1}) - 1;	% update the end index of the population matrix
+            G = G_N(1:G_ix_end(i), 1:G_ix_end(i));      % get the matrix for a population of i neurons
+            q = q_N(1:G_ix_end(i));                     % get the q_i
+            ck = pinv(G,1e-7)*q;                        % calculate cks
+            sk = sk_N(1:G_ix_end(i));                   % get sks
+            h_rec_N(i,:) = synsig(dt,t_Ph, ck, sk, W ); % recover the filter
         end
-        h_rec_N(N,:) = Ph(1,:);              % the last entry is the recovery for all N windows     
+        h_rec_N(N,:) = Ph(1,:);                         % the last entry is the recovery for all N windows     
         varargout = {h_rec_N};
     end
+    
+    %V = synsig( DT, T_SIG, S, S_T, OMEGA ) synthesizes the bandlimited 
+    %   signal V of time course T_SIG from samples S at samples time S_T.
+    %   The time step is DT, and the frequency support of V is bounded by
+    %   [-OMEGA, OMEGA].
+    function v = synsig(dt, t_sig, s, s_t, Omega)
+        v = zeros(size(t_sig));
+        % Naive method 
+        if dt >= 5e-6;
+            for j = 1:numel(s)
+                v = v + s(j)* Omega/pi * sinc( Omega/pi*(t_sig- s_t(j) ));
+            end
+        % FFT-based method. Faster and more accurate only for small dt. 
+        else
+            v( round((s_t-t_sig(1))/dt)+1 ) = s;
+            t_sinc = dt*(-numel(t_sig)+1:numel(t_sig));
+            v = fftfilt(v, sinc(t_sinc*Omega/pi)*Omega/pi);
+            v = v(end-length(t_sig)+1:end);
+        end
+    end
 
+    %IDX = time2idx( TIME, DT, LOWERBOUND, UPPERBOUND ) discretizes the 
+    %   continuous-valued TIME to IDX with step DT. IDX is hard limited by 
+    %   the upper bound UPPERBOUND and lower bound LOWERBOUND.
+    function idx = time2idx( time, dt, lowerBound, upperBound )
+        idx = round( time/dt ) + 1;
+        idx(idx < lowerBound) = lowerBound;
+        idx(idx > upperBound) = upperBound;
+    end
 end % end of function
