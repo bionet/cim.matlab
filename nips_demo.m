@@ -78,7 +78,7 @@ t_Ph = t_Ph(idx);                           % truncate t_Ph
 Ph = Ph(idx);                               % truncate Ph
 h_long = zeros(size(t_Ph));                 % set zero-padded version of h
 h_long( find(abs(t_Ph-t_filt(1))<dt/2):... 
-        find(abs(t_Ph-t_filt(end))<dt/2)  ) = h; 
+        find(abs(t_Ph-t_filt(end))<dt/2)  ) = h;
 %%
 figure('Name','Filter projection','Position',[0 0 600 300],'color','white');
 plot(t_Ph,h_long,'--k',t_Ph, Ph,'b');
@@ -136,7 +136,7 @@ figure('Name','Neural circuit output','Position',[0 0 600 300],'color','white');
 % Nyquist-type condition on the density of spikes is achieved quickly (see
 % also Theorem 1 and Remark 1 in [1]).
 
-T_filt_rec = 0.12;                          % specify the hypothesized length of the implulse response 
+T_filt_rec = 0.12;                          % specify the hypothesized length of the impulse response 
 tau_1 = -(T_filt_rec - t_filt(end))/2;      % get tau_1 and tau_2. Here W is centered around the actual
 tau_2 = t_filt(end)-tau_1;                  % temporal support T_2-T_1
 N_max = 10;                                 % set the maximum number of windows to be used 
@@ -220,14 +220,14 @@ figure('Name','NIPS 2010 Fig. 4','Position',[0 0 1440 1080],'color','white')
         hold on;plot(Hmss.frequencies,10*log10(Hmss.data));grid on;
         legend('supp$(\mathcal{F}v)=[-\Omega,\Omega]\qquad$');
 %% Generate Fig. 5 of [1]
-% The follwoing procedures are same as above except that the input stimulus 
-% is now bandlimited to 100Hz.
+% The following procedures are same as above except that the input stimulus 
+% is now band-limited to 100Hz.
 f  = 100;                                   % set the input signal bandwidth, [Hz]
 W  = 2*pi*f;                                % calculate the bandwidth in [rad]
 Ts = pi/W;                                  % calculate the sampling period in [s]
 t  = 0:dt:2.12;                             % create a time vector for the input stimulus
 %%
-% Create a bandlimited stimulus. The bandwidth W = 2\pi*100 rad/s
+% Create a band-limited stimulus. The bandwidth W = 2\pi*100 rad/s
 rng(19871127,'v5uniform');                  % fix the state of random number generator for reproducible result
 u = zeros(1,length(t));                     % initialize the stimulus u(t)
 N_samp = floor((t(end)-t(1))/Ts);           % find the number of stimulus samples
@@ -251,7 +251,7 @@ Ph = Ph(idx);                               % truncate Ph
 v = dt*fftfilt(h,u);                        % convolve u with h
 
 v_proper = v(length(h):end);                % get the proper part of v
-t_proper = t(length(h):end);                % get the correspoding time vector
+t_proper = t(length(h):end);                % get the corresponding time vector
 u_proper = u(length(h):end);                % get the corresponding stimulus
 %%
 % Encode the filter output v=u*h with an IAF neuron
@@ -262,10 +262,10 @@ kappa = 1;                                  % set capacitance
 [spk_train vol_trace] = ideal_iaf_encode(v_proper,t_proper,bias,delta,kappa);
 %%
 % Identify the filter projection Ph
-T_filt_rec = 0.11;                          % specify the hypothesized length of the implulse response 
+T_filt_rec = 0.11;                          % specify the hypothesized length of the impulse response 
 tau_1 = -(T_filt_rec - t_filt(end))/2;      % get tau_1 and tau_2. Here W is centered around the actual
 tau_2 = t_filt(end)-tau_1;                  % temporal support T_2-T_1
-N_max = 15;                                 % set the maximum number of windows to be used (could be smaller depending on the simulation)
+N_max = 15;                                 % set the maximum number of windows to be used
 
 tic_CIM = tic;                              % start the algorithm timer
 [h_hat windows] = identify_h_ideal_iaf(dt, t_Ph, t_proper, u_proper, W,...
@@ -364,7 +364,7 @@ W = 2*pi*f;                                 % calculate the bandwidth in [rad]
 Ts = pi/W;                                  % calculate the sampling period in [s]
 t = 0:dt:8.5;                               % create a time vector for the input stimulus
 %%
-% Create a bandlimited stimulus. The bandwidth W = 2\pi*100 rad/s
+% Create a band-limited stimulus. The bandwidth W = 2\pi*100 rad/s
 rng(19871127,'v5uniform');                  % set the state of random number generator
 u = zeros(1,length(t));                     % initialize the stimulus u(t)
 N_samp = floor((t(end)-t(1))/Ts);           % find the number of stimulus samples
@@ -391,7 +391,7 @@ Ph = Ph(idx);                               % truncate Ph
 v = dt*fftfilt(h,u);                        % convolve u with h
 
 v_proper = v(length(h):end);                % get the proper part of v
-t_proper = t(length(h):end);                % get the correspoding time vector
+t_proper = t(length(h):end);                % get the corresponding time vector
 u_proper = u(length(h):end);                % get the corresponding stimulus
 %%
 % Get data for Fig. 6a
@@ -405,7 +405,7 @@ D = [20 40 60];                             % set the average spiking density
 MSE_N = cell(3,1);                          % initialize the MSE cell
 N_max = 30;                                 % set the maximum number of windows to be used
 
-T_filt_rec = 0.11;                          % specify the hypothesized length of the implulse response 
+T_filt_rec = 0.11;                          % specify the hypothesized length of the impulse response 
 tau_1 = -(T_filt_rec - t_filt(end))/2;      % get tau_1 and tau_2. Here W is centered around the actual
 tau_2 = t_filt(end)-tau_1;                  % temporal support T_2-T_1
 idx = (t_Ph>=tau_1) & (t_Ph<=tau_2);        % find indices of t for the given temporal window on which to compute the MSE
@@ -476,7 +476,7 @@ for i = 1:length(f)
     v = dt*fftfilt(h,u);                    % convolve u with h
     
     v_proper = v(length(h):end);            % get the proper part of v
-    t_proper = t(length(h):end);            % get the correspoding time vector
+    t_proper = t(length(h):end);            % get the corresponding time vector
     u_proper = u(length(h):end);            % get the corresponding stimulus
     
     % Encode the filter output v=u*h with an IAF neuron
@@ -534,7 +534,7 @@ set(0,'defaulttextinterpreter','none')          % reset MATLAB latex interpreter
 % Advances in Neural Information Processing Systems 23, pp. 1261-1269, 2010
 %
 % [2] E.H. Adelson and J R. Bergen, Spatiotemporal energy models for the
-% perception of motion, Journal of the Optical Society of America, Vol
+% perception of motion, Journal of the Optical Society of America, Vol.
 % 2(2),1985
 
 %%

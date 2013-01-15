@@ -33,11 +33,11 @@ function [Ph windows varargout] = ...
     parse(p,varargin{:});
     UnmatchedParam = fieldnames(p.Unmatched);
     if ~isempty(UnmatchedParam)
-        error(['"',UnmatchedParam{1},'" is not a valid paprameter. ' ...
+        error(['"',UnmatchedParam{1},'" is not a valid parameter. ' ...
                'Please use "Calc_MSE_N" instead...']);
     end
 
-    % Check the number of ouput arguments
+    % Check the number of output arguments
     if p.Results.Calc_MSE_N
         error(nargoutchk(1, 3, nargout, 'struct'));
     else
@@ -99,7 +99,7 @@ function [Ph windows varargout] = ...
     tk_in_window = tk_in_window(1:N);
     windows = windows(1:N);
 
-    % Compatue q of each window, and merge all q to a single vector
+    % Compute q of each window, and merge all q to a single vector
     q_N = cell2mat(cellfun( @(x) k*d-b*diff(x), tk_in_window, 'UniformOutput',false))';
 
     % Compute T (Corollary 3 of [1])
@@ -159,7 +159,7 @@ function [Ph windows varargout] = ...
         varargout = {h_rec_N};
     end
     
-    %V = synsig( DT, T_SIG, S, S_T, OMEGA ) synthesizes the bandlimited 
+    %V = synsig( DT, T_SIG, S, S_T, OMEGA ) synthesizes the band-limited 
     %   signal V of time course T_SIG from samples S at samples time S_T.
     %   The time step is DT, and the frequency support of V is bounded by
     %   [-OMEGA, OMEGA].

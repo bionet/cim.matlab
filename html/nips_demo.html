@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Identifying Dendritic Processing in a [Filter]-[Ideal IAF] neural circuit</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2013-01-13"><meta name="DC.source" content="nips_demo.m"><style type="text/css">
+      --><title>Identifying Dendritic Processing in a [Filter]-[Ideal IAF] neural circuit</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2013-01-14"><meta name="DC.source" content="nips_demo.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -127,7 +127,7 @@ kappa = 1;                                  <span class="comment">% set the capa
 
 timer = toc(tic_init);                      <span class="comment">% get the initialization time</span>
 runtime(<span class="string">'Initialization time: '</span>,timer);     <span class="comment">% display the initialization time</span>
-</pre><pre class="codeoutput">Initialization time: 0' 3.3"
+</pre><pre class="codeoutput">Initialization time: 0' 3.5"
 </pre><p>Plot the voltage trace and the associated spike train</p><pre class="codeinput">figure(<span class="string">'Name'</span>,<span class="string">'Neural circuit output'</span>,<span class="string">'Position'</span>,[0 0 600 300],<span class="string">'color'</span>,<span class="string">'white'</span>);
     set(subplot(7,1,1:5),<span class="string">'xlim'</span>,[0 1],<span class="string">'ylim'</span>,[min(vol_trace) delta*1.1],<span class="string">'box'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
         <span class="string">'xticklabel'</span>,[],<span class="string">'ylabel'</span>,text(<span class="string">'string'</span>,<span class="string">'Amplitude'</span>),<span class="keyword">...</span>
@@ -143,7 +143,7 @@ runtime(<span class="string">'Initialization time: '</span>,timer);     <span cl
         hold <span class="string">on</span>;
         stem(spk_train-t_proper(1), ones(size(spk_train)), <span class="string">'^k'</span>, <span class="string">'filled'</span>);
         legend(<span class="string">'$(t_k)_{k\in Z}$'</span>, <span class="string">'location'</span>,<span class="string">'East'</span>);
-</pre><img vspace="5" hspace="5" src="nips_demo_05.png" alt=""> <h2>Identify the filter projection Ph<a name="12"></a></h2><p>Since the temporal support of the filter h is not known, we identify the projection Ph in a window W = [tau_1, tau_2]. Temporal windows W^i of spikes can be chosen arbitrarily. Here we pick W^i so that the Nyquist-type condition on the density of spikes is achieved quickly (see also Theorem 1 and Remark 1 in [1]).</p><pre class="codeinput">T_filt_rec = 0.12;                          <span class="comment">% specify the hypothesized length of the implulse response</span>
+</pre><img vspace="5" hspace="5" src="nips_demo_05.png" alt=""> <h2>Identify the filter projection Ph<a name="12"></a></h2><p>Since the temporal support of the filter h is not known, we identify the projection Ph in a window W = [tau_1, tau_2]. Temporal windows W^i of spikes can be chosen arbitrarily. Here we pick W^i so that the Nyquist-type condition on the density of spikes is achieved quickly (see also Theorem 1 and Remark 1 in [1]).</p><pre class="codeinput">T_filt_rec = 0.12;                          <span class="comment">% specify the hypothesized length of the impulse response</span>
 tau_1 = -(T_filt_rec - t_filt(end))/2;      <span class="comment">% get tau_1 and tau_2. Here W is centered around the actual</span>
 tau_2 = t_filt(end)-tau_1;                  <span class="comment">% temporal support T_2-T_1</span>
 N_max = 10;                                 <span class="comment">% set the maximum number of windows to be used</span>
@@ -155,7 +155,7 @@ tic_CIM = tic;                              <span class="comment">% start the al
 
 timer = toc(tic_CIM);                       <span class="comment">% stop the algorithm timer</span>
 runtime(<span class="string">'CIM running time: '</span>,timer);        <span class="comment">% display execution time</span>
-</pre><pre class="codeoutput">CIM running time: 0' 0.1"
+</pre><pre class="codeoutput">CIM running time: 0' 0.4"
 </pre><h2>Generate Fig. 4 of [1]<a name="13"></a></h2><pre class="codeinput">figure(<span class="string">'Name'</span>,<span class="string">'NIPS 2010 Fig. 4'</span>,<span class="string">'Position'</span>,[0 0 1440 1080],<span class="string">'color'</span>,<span class="string">'white'</span>)
     <span class="comment">% plot the input stimulus u</span>
     set(subplot(3,2,1),<span class="string">'xlim'</span>,[0 1],<span class="string">'ylim'</span>,[-1 1],<span class="string">'box'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
@@ -226,11 +226,11 @@ runtime(<span class="string">'CIM running time: '</span>,timer);        <span cl
         Hmss = msspectrum(h_spctr,v_proper,hopts);
         hold <span class="string">on</span>;plot(Hmss.frequencies,10*log10(Hmss.data));grid <span class="string">on</span>;
         legend(<span class="string">'supp$(\mathcal{F}v)=[-\Omega,\Omega]\qquad$'</span>);
-</pre><img vspace="5" hspace="5" src="nips_demo_06.png" alt=""> <h2>Generate Fig. 5 of [1]<a name="14"></a></h2><p>The follwoing procedures are same as above except that the input stimulus is now bandlimited to 100Hz.</p><pre class="codeinput">f  = 100;                                   <span class="comment">% set the input signal bandwidth, [Hz]</span>
+</pre><img vspace="5" hspace="5" src="nips_demo_06.png" alt=""> <h2>Generate Fig. 5 of [1]<a name="14"></a></h2><p>The following procedures are same as above except that the input stimulus is now band-limited to 100Hz.</p><pre class="codeinput">f  = 100;                                   <span class="comment">% set the input signal bandwidth, [Hz]</span>
 W  = 2*pi*f;                                <span class="comment">% calculate the bandwidth in [rad]</span>
 Ts = pi/W;                                  <span class="comment">% calculate the sampling period in [s]</span>
 t  = 0:dt:2.12;                             <span class="comment">% create a time vector for the input stimulus</span>
-</pre><p>Create a bandlimited stimulus. The bandwidth W = 2\pi*100 rad/s</p><pre class="codeinput">rng(19871127,<span class="string">'v5uniform'</span>);                  <span class="comment">% fix the state of random number generator for reproducible result</span>
+</pre><p>Create a band-limited stimulus. The bandwidth W = 2\pi*100 rad/s</p><pre class="codeinput">rng(19871127,<span class="string">'v5uniform'</span>);                  <span class="comment">% fix the state of random number generator for reproducible result</span>
 u = zeros(1,length(t));                     <span class="comment">% initialize the stimulus u(t)</span>
 N_samp = floor((t(end)-t(1))/Ts);           <span class="comment">% find the number of stimulus samples</span>
 ukT = randn(1,N_samp);                      <span class="comment">% use randomly generated signal samples (e.g., from a Gaussian distribution)</span>
@@ -249,17 +249,17 @@ Ph = Ph(idx);                               <span class="comment">% truncate Ph<
 </pre><p>Filter the input signal u</p><pre class="codeinput">v = dt*fftfilt(h,u);                        <span class="comment">% convolve u with h</span>
 
 v_proper = v(length(h):end);                <span class="comment">% get the proper part of v</span>
-t_proper = t(length(h):end);                <span class="comment">% get the correspoding time vector</span>
+t_proper = t(length(h):end);                <span class="comment">% get the corresponding time vector</span>
 u_proper = u(length(h):end);                <span class="comment">% get the corresponding stimulus</span>
 </pre><p>Encode the filter output v=u*h with an IAF neuron</p><pre class="codeinput">delta = 0.007;                              <span class="comment">% set the threshold</span>
 bias  = 0.28;                               <span class="comment">% set the bias</span>
 kappa = 1;                                  <span class="comment">% set capacitance</span>
 
 [spk_train vol_trace] = ideal_iaf_encode(v_proper,t_proper,bias,delta,kappa);
-</pre><p>Identify the filter projection Ph</p><pre class="codeinput">T_filt_rec = 0.11;                          <span class="comment">% specify the hypothesized length of the implulse response</span>
+</pre><p>Identify the filter projection Ph</p><pre class="codeinput">T_filt_rec = 0.11;                          <span class="comment">% specify the hypothesized length of the impulse response</span>
 tau_1 = -(T_filt_rec - t_filt(end))/2;      <span class="comment">% get tau_1 and tau_2. Here W is centered around the actual</span>
 tau_2 = t_filt(end)-tau_1;                  <span class="comment">% temporal support T_2-T_1</span>
-N_max = 15;                                 <span class="comment">% set the maximum number of windows to be used (could be smaller depending on the simulation)</span>
+N_max = 15;                                 <span class="comment">% set the maximum number of windows to be used</span>
 
 tic_CIM = tic;                              <span class="comment">% start the algorithm timer</span>
 [h_hat windows] = identify_h_ideal_iaf(dt, t_Ph, t_proper, u_proper, W,<span class="keyword">...</span>
@@ -346,7 +346,7 @@ f = 100;                                    <span class="comment">% set the inpu
 W = 2*pi*f;                                 <span class="comment">% calculate the bandwidth in [rad]</span>
 Ts = pi/W;                                  <span class="comment">% calculate the sampling period in [s]</span>
 t = 0:dt:8.5;                               <span class="comment">% create a time vector for the input stimulus</span>
-</pre><p>Create a bandlimited stimulus. The bandwidth W = 2\pi*100 rad/s</p><pre class="codeinput">rng(19871127,<span class="string">'v5uniform'</span>);                  <span class="comment">% set the state of random number generator</span>
+</pre><p>Create a band-limited stimulus. The bandwidth W = 2\pi*100 rad/s</p><pre class="codeinput">rng(19871127,<span class="string">'v5uniform'</span>);                  <span class="comment">% set the state of random number generator</span>
 u = zeros(1,length(t));                     <span class="comment">% initialize the stimulus u(t)</span>
 N_samp = floor((t(end)-t(1))/Ts);           <span class="comment">% find the number of stimulus samples</span>
 ukT = randn(1,N_samp);                      <span class="comment">% use randomly generated signal samples (e.g., from a Gaussian distribution)</span>
@@ -368,7 +368,7 @@ Ph = Ph(idx);                               <span class="comment">% truncate Ph<
 </pre><p>Filter the input signal u</p><pre class="codeinput">v = dt*fftfilt(h,u);                        <span class="comment">% convolve u with h</span>
 
 v_proper = v(length(h):end);                <span class="comment">% get the proper part of v</span>
-t_proper = t(length(h):end);                <span class="comment">% get the correspoding time vector</span>
+t_proper = t(length(h):end);                <span class="comment">% get the corresponding time vector</span>
 u_proper = u(length(h):end);                <span class="comment">% get the corresponding stimulus</span>
 </pre><p>Get data for Fig. 6a</p><p>To demonstrate how the MSE changes as a function of the neuron spike density D, we encode the input signal with an IAF neuron having a different bias b = D*delta/kappa.</p><pre class="codeinput">Fig6a_tic = tic;                            <span class="comment">% initialize the timer for Fig.6a</span>
 
@@ -376,7 +376,7 @@ D = [20 40 60];                             <span class="comment">% set the aver
 MSE_N = cell(3,1);                          <span class="comment">% initialize the MSE cell</span>
 N_max = 30;                                 <span class="comment">% set the maximum number of windows to be used</span>
 
-T_filt_rec = 0.11;                          <span class="comment">% specify the hypothesized length of the implulse response</span>
+T_filt_rec = 0.11;                          <span class="comment">% specify the hypothesized length of the impulse response</span>
 tau_1 = -(T_filt_rec - t_filt(end))/2;      <span class="comment">% get tau_1 and tau_2. Here W is centered around the actual</span>
 tau_2 = t_filt(end)-tau_1;                  <span class="comment">% temporal support T_2-T_1</span>
 idx = (t_Ph&gt;=tau_1) &amp; (t_Ph&lt;=tau_2);        <span class="comment">% find indices of t for the given temporal window on which to compute the MSE</span>
@@ -407,7 +407,7 @@ idx = (t_Ph&gt;=tau_1) &amp; (t_Ph&lt;=tau_2);        <span class="comment">% fi
 
 timer = toc(Fig6a_tic);                     <span class="comment">% stop the timer for Fig.6a</span>
 runtime(<span class="string">'Fig. 6a time: '</span>,timer);            <span class="comment">% display the running time for Fig.6a</span>
-</pre><pre class="codeoutput">Fig. 6a time: 0' 3.9"
+</pre><pre class="codeoutput">Fig. 6a time: 0' 3.7"
 </pre><p>Get data for Fig. 6b</p><p>In the following, for fixed number of windows N, we compute the MSE between the original filter h and the identified filter h_hat as a function of the input signal bandwidth</p><pre class="codeinput">Fig6b_tic = tic;                            <span class="comment">% initialize the timer for Fig.6b</span>
 
 f = 10:10:150;                              <span class="comment">% specify the bandwidth vector</span>
@@ -442,7 +442,7 @@ t_sinc = -t(end):dt:t(end);                 <span class="comment">% set time cou
     v = dt*fftfilt(h,u);                    <span class="comment">% convolve u with h</span>
 
     v_proper = v(length(h):end);            <span class="comment">% get the proper part of v</span>
-    t_proper = t(length(h):end);            <span class="comment">% get the correspoding time vector</span>
+    t_proper = t(length(h):end);            <span class="comment">% get the corresponding time vector</span>
     u_proper = u(length(h):end);            <span class="comment">% get the corresponding stimulus</span>
 
     <span class="comment">% Encode the filter output v=u*h with an IAF neuron</span>
@@ -460,7 +460,7 @@ t_sinc = -t(end):dt:t(end);                 <span class="comment">% set time cou
 <span class="keyword">end</span>
 timer = toc(Fig6b_tic);                     <span class="comment">% stop the timer for Fig.6b</span>
 runtime(<span class="string">'Fig. 6b time: '</span>,timer);            <span class="comment">% display the running time for Fig.6b</span>
-</pre><pre class="codeoutput">Fig. 6b time: 0' 4.6"
+</pre><pre class="codeoutput">Fig. 6b time: 0' 4.4"
 </pre><p>Plot Fig. 6 of [1]</p><pre class="codeinput">figure(<span class="string">'Name'</span>,<span class="string">'NIPS 2010 Fig. 6'</span>,<span class="string">'Position'</span>,[0 0 1200 800], <span class="string">'color'</span>, <span class="string">'white'</span>);
     <span class="comment">% MSE vs number of windows</span>
     set(subplot(211),<span class="string">'xlim'</span>,[0 30],<span class="string">'ylim'</span>,[-100 20],<span class="string">'box'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
@@ -489,12 +489,12 @@ runtime(<span class="string">'Fig. 6b time: '</span>,timer);            <span cl
 
 timer = toc(Fig6_tic);                          <span class="comment">% stop the timer for Fig.6</span>
 runtime(<span class="string">'Total Fig. 6 time: '</span>,timer);           <span class="comment">% display the running time for Fig.6</span>
-</pre><pre class="codeoutput">Total Fig. 6 time: 0' 11.8"
+</pre><pre class="codeoutput">Total Fig. 6 time: 0' 11.4"
 </pre><img vspace="5" hspace="5" src="nips_demo_08.png" alt=""> <p>Finalize the demo.</p><pre class="codeinput">timer = toc(tic_demo);                          <span class="comment">% stop the demo timer</span>
 runtime(<span class="string">'Demo time: '</span>,timer);                   <span class="comment">% display the demo time</span>
 set(0,<span class="string">'defaulttextinterpreter'</span>,<span class="string">'none'</span>)          <span class="comment">% reset MATLAB latex interpreter</span>
-</pre><pre class="codeoutput">Demo time: 0' 31.3"
-</pre><h2>Reference<a name="29"></a></h2><p>[1] A.A. Lazar and Y.B. Slutskiy, Identifying Dendritic Processing, Advances in Neural Information Processing Systems 23, pp. 1261-1269, 2010</p><p>[2] E.H. Adelson and J R. Bergen, Spatiotemporal energy models for the perception of motion, Journal of the Optical Society of America, Vol 2(2),1985</p><p><i>Author: Yevgeniy B. Slutskiy <a href="ys2146@columbia.edu">ys2146@columbia.edu</a></i></p><p><i>Revision Author: Chung-Heng Yeh <a href="chyeh@ee.columbia.edu">chyeh@ee.columbia.edu</a></i></p><p><i>Bionet Group, Columbia University</i></p><p><i>Copyright 2012-2014 Yevgeniy B. Slutskiy and Chung-Heng Yeh</i></p><p class="footer"><br>
+</pre><pre class="codeoutput">Demo time: 0' 31.4"
+</pre><h2>Reference<a name="29"></a></h2><p>[1] A.A. Lazar and Y.B. Slutskiy, Identifying Dendritic Processing, Advances in Neural Information Processing Systems 23, pp. 1261-1269, 2010</p><p>[2] E.H. Adelson and J R. Bergen, Spatiotemporal energy models for the perception of motion, Journal of the Optical Society of America, Vol. 2(2),1985</p><p><i>Author: Yevgeniy B. Slutskiy <a href="ys2146@columbia.edu">ys2146@columbia.edu</a></i></p><p><i>Revision Author: Chung-Heng Yeh <a href="chyeh@ee.columbia.edu">chyeh@ee.columbia.edu</a></i></p><p><i>Bionet Group, Columbia University</i></p><p><i>Copyright 2012-2014 Yevgeniy B. Slutskiy and Chung-Heng Yeh</i></p><p class="footer"><br>
       Published with MATLAB&reg; 7.14<br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Identifying Dendritic Processing in a [Filter]-[Ideal IAF] neural circuit
@@ -577,7 +577,7 @@ t_Ph = t_Ph(idx);                           % truncate t_Ph
 Ph = Ph(idx);                               % truncate Ph
 h_long = zeros(size(t_Ph));                 % set zero-padded version of h
 h_long( find(abs(t_Ph-t_filt(1))<dt/2):... 
-        find(abs(t_Ph-t_filt(end))<dt/2)  ) = h; 
+        find(abs(t_Ph-t_filt(end))<dt/2)  ) = h;
 %%
 figure('Name','Filter projection','Position',[0 0 600 300],'color','white');
 plot(t_Ph,h_long,'REPLACE_WITH_DASH_DASHk',t_Ph, Ph,'b');
@@ -635,7 +635,7 @@ figure('Name','Neural circuit output','Position',[0 0 600 300],'color','white');
 % Nyquist-type condition on the density of spikes is achieved quickly (see
 % also Theorem 1 and Remark 1 in [1]).
 
-T_filt_rec = 0.12;                          % specify the hypothesized length of the implulse response 
+T_filt_rec = 0.12;                          % specify the hypothesized length of the impulse response 
 tau_1 = -(T_filt_rec - t_filt(end))/2;      % get tau_1 and tau_2. Here W is centered around the actual
 tau_2 = t_filt(end)-tau_1;                  % temporal support T_2-T_1
 N_max = 10;                                 % set the maximum number of windows to be used 
@@ -719,14 +719,14 @@ figure('Name','NIPS 2010 Fig. 4','Position',[0 0 1440 1080],'color','white')
         hold on;plot(Hmss.frequencies,10*log10(Hmss.data));grid on;
         legend('supp$(\mathcal{F}v)=[-\Omega,\Omega]\qquad$');
 %% Generate Fig. 5 of [1]
-% The follwoing procedures are same as above except that the input stimulus 
-% is now bandlimited to 100Hz.
+% The following procedures are same as above except that the input stimulus 
+% is now band-limited to 100Hz.
 f  = 100;                                   % set the input signal bandwidth, [Hz]
 W  = 2*pi*f;                                % calculate the bandwidth in [rad]
 Ts = pi/W;                                  % calculate the sampling period in [s]
 t  = 0:dt:2.12;                             % create a time vector for the input stimulus
 %%
-% Create a bandlimited stimulus. The bandwidth W = 2\pi*100 rad/s
+% Create a band-limited stimulus. The bandwidth W = 2\pi*100 rad/s
 rng(19871127,'v5uniform');                  % fix the state of random number generator for reproducible result
 u = zeros(1,length(t));                     % initialize the stimulus u(t)
 N_samp = floor((t(end)-t(1))/Ts);           % find the number of stimulus samples
@@ -750,7 +750,7 @@ Ph = Ph(idx);                               % truncate Ph
 v = dt*fftfilt(h,u);                        % convolve u with h
 
 v_proper = v(length(h):end);                % get the proper part of v
-t_proper = t(length(h):end);                % get the correspoding time vector
+t_proper = t(length(h):end);                % get the corresponding time vector
 u_proper = u(length(h):end);                % get the corresponding stimulus
 %%
 % Encode the filter output v=u*h with an IAF neuron
@@ -761,10 +761,10 @@ kappa = 1;                                  % set capacitance
 [spk_train vol_trace] = ideal_iaf_encode(v_proper,t_proper,bias,delta,kappa);
 %%
 % Identify the filter projection Ph
-T_filt_rec = 0.11;                          % specify the hypothesized length of the implulse response 
+T_filt_rec = 0.11;                          % specify the hypothesized length of the impulse response 
 tau_1 = -(T_filt_rec - t_filt(end))/2;      % get tau_1 and tau_2. Here W is centered around the actual
 tau_2 = t_filt(end)-tau_1;                  % temporal support T_2-T_1
-N_max = 15;                                 % set the maximum number of windows to be used (could be smaller depending on the simulation)
+N_max = 15;                                 % set the maximum number of windows to be used
 
 tic_CIM = tic;                              % start the algorithm timer
 [h_hat windows] = identify_h_ideal_iaf(dt, t_Ph, t_proper, u_proper, W,...
@@ -863,7 +863,7 @@ W = 2*pi*f;                                 % calculate the bandwidth in [rad]
 Ts = pi/W;                                  % calculate the sampling period in [s]
 t = 0:dt:8.5;                               % create a time vector for the input stimulus
 %%
-% Create a bandlimited stimulus. The bandwidth W = 2\pi*100 rad/s
+% Create a band-limited stimulus. The bandwidth W = 2\pi*100 rad/s
 rng(19871127,'v5uniform');                  % set the state of random number generator
 u = zeros(1,length(t));                     % initialize the stimulus u(t)
 N_samp = floor((t(end)-t(1))/Ts);           % find the number of stimulus samples
@@ -890,7 +890,7 @@ Ph = Ph(idx);                               % truncate Ph
 v = dt*fftfilt(h,u);                        % convolve u with h
 
 v_proper = v(length(h):end);                % get the proper part of v
-t_proper = t(length(h):end);                % get the correspoding time vector
+t_proper = t(length(h):end);                % get the corresponding time vector
 u_proper = u(length(h):end);                % get the corresponding stimulus
 %%
 % Get data for Fig. 6a
@@ -904,7 +904,7 @@ D = [20 40 60];                             % set the average spiking density
 MSE_N = cell(3,1);                          % initialize the MSE cell
 N_max = 30;                                 % set the maximum number of windows to be used
 
-T_filt_rec = 0.11;                          % specify the hypothesized length of the implulse response 
+T_filt_rec = 0.11;                          % specify the hypothesized length of the impulse response 
 tau_1 = -(T_filt_rec - t_filt(end))/2;      % get tau_1 and tau_2. Here W is centered around the actual
 tau_2 = t_filt(end)-tau_1;                  % temporal support T_2-T_1
 idx = (t_Ph>=tau_1) & (t_Ph<=tau_2);        % find indices of t for the given temporal window on which to compute the MSE
@@ -975,7 +975,7 @@ for i = 1:length(f)
     v = dt*fftfilt(h,u);                    % convolve u with h
     
     v_proper = v(length(h):end);            % get the proper part of v
-    t_proper = t(length(h):end);            % get the correspoding time vector
+    t_proper = t(length(h):end);            % get the corresponding time vector
     u_proper = u(length(h):end);            % get the corresponding stimulus
     
     % Encode the filter output v=u*h with an IAF neuron
@@ -1033,7 +1033,7 @@ set(0,'defaulttextinterpreter','none')          % reset MATLAB latex interpreter
 % Advances in Neural Information Processing Systems 23, pp. 1261-1269, 2010
 %
 % [2] E.H. Adelson and J R. Bergen, Spatiotemporal energy models for the
-% perception of motion, Journal of the Optical Society of America, Vol
+% perception of motion, Journal of the Optical Society of America, Vol.
 % 2(2),1985
 
 %%

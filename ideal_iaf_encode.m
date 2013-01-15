@@ -19,7 +19,7 @@ function [s, v]  = ideal_iaf_encode(u, t, b, d, k)
     dt = t(2)-t(1);                 % get the time-step dt
     s = [];                         % initialize the spikes list
     v = zeros(1, length(t));        % initialize the voltage trace
-    e = 0;                          % initialize the intrgration error term
+    e = 0;                          % initialize the integration error term
 
     for i=2:length(t)
 
