@@ -1,0 +1,20 @@
+@conference{LAS10,
+author = {Aurel A. Lazar and Yevgeniy B. Slutskiy},
+title = {Identifying Dendritic Processing},
+booktitle = {Advances in Neural Information Processing Systems 23},
+editor = {J. Lafferty and C. K. I. Williams and J. Shawe-Taylor and R.S. Zemel and A. Culotta},
+pages = {1261--1269},
+year = {2010},
+note = {spotlight presentation}
+}
+
+@article{LBY12, 
+author = {Aurel A. Lazar and Yevgeniy B. Slutskiy}, 
+title = {Channel Identification Machines}, 
+journal = {Journal of Computational Intelligence and Neuroscience}, 
+month = {July}, 
+year = {2012}, 
+volume = {2012} 
+pages = {1-20}, 
+comment = {doi:10.1155/2012/209590} 
+}

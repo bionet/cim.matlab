@@ -1,0 +1,39 @@
+.. -*- rst -*-
+
+Installation Instructions
+=========================
+
+Prerequisites
+-------------
+
+The Channel Identification Machines Toolbox requires a relatively recent 
+version of MATLAB (e.g., R2012a or 7.14) to run.
+
+Building and Installation
+-------------------------
+
+Unpack the archive into an installation directory of your
+choice. Assuming that Matlab is installed in the directory whose name
+is stored in the environmental variable ``$MATLAB``, one may wish to
+install the software in ``$MATLAB/toolbox/cim`` if one has
+administrative access to the machine.
+
+Add the subdirectories of the installation directory to Matlab's
+search path so that the functions comprised by the toolbox may be
+easily accessed. For example, if the software is installed in
+``$MATLAB/toolbox``, one may add the following lines to the list of
+paths in ``$MATLAB/toolbox/local/pathdef.m`` and restart Matlab to make 
+the toolbox contents available:
+
+   matlabroot,'/toolbox/cim/cim:', ...
+
+Alternatively, one may also add the path to the toolbox for the
+duration of one session by running the commands
+
+   addpath(strcat(getenv('MATLAB'),'/toolbox/cim/cim'));
+
+or add the above commands to ``startup.m`` so that they executed when the 
+MATLAB program starts.
+
+Please consult the MATLAB documentation for  ``pathdef.m``,  ``addpath.m``, 
+and  ``startup.m`` if necessary.

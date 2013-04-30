@@ -1,0 +1,17 @@
+.. -*- rst -*-
+
+Change Log
+==========
+
+Release 0.021 - (April 30, 2013)
+--------------------------------
+* Reorganize files and folders.
+* Add supporting files.
+
+Release 0.02 - (January 14, 2013)
+---------------------------------
+* Improve performance of CIM.
+
+Release 0.01 - (July 23, 2012)
+------------------------------
+* First public release.

@@ -1,0 +1,21 @@
+.. -*- rst -*-
+
+Authors & Acknowledgments
+=========================
+
+The implementations in this toolbox were written by the following
+current member of the Bionet Group [1]_ at Electrical Engineering
+Department of Columbia University under the supervision of Prof. 
+Aurel A. Lazar [2]_:
+
+* Yevgeniy B. Slutskiy
+
+The software in this toolbox was revised and packaged by
+
+* Chung-Heng Yeh
+
+Some portions of the code are partially based upon TED toolbox.
+
+.. [1] http://bionet.ee.columbia.edu/
+.. [2] http://www.ee.columbia.edu/~aurel/
+.. [3] https://github.com/bionet/ted.matlab/
