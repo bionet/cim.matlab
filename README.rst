@@ -36,7 +36,7 @@ Contact Information
 
 Please direct all questions and comments pertaining to this software to
 
-` Yevgeniy B. Slutskiy <ys2146@columbia.edu>`_
+`Yevgeniy B. Slutskiy <ys2146@columbia.edu>`_
 
 References
 ----------
