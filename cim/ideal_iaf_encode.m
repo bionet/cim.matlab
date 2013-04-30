@@ -12,7 +12,7 @@
 %
 %   Authors: Lev Givon, Yevgeniy B. Slutskiy and Chung-Heng Yeh
 %
-%   Copyright 2010-2012 Lev Givon, Yevgeniy B. Slutskiy and Chung-Heng Yeh
+%   Copyright 2012-2014 Lev Givon, Yevgeniy B. Slutskiy and Chung-Heng Yeh
 
 function [s, v]  = ideal_iaf_encode(u, t, b, d, k)
 

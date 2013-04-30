@@ -12,7 +12,7 @@
 % 
 % Bionet Group, Columbia University
 %
-% Copyright 2010-2012   Yevgeniy B. Slutskiy and Chung-Heng Yeh
+% Copyright 2012-2014   Yevgeniy B. Slutskiy and Chung-Heng Yeh
 
 %% Initialize the demo
 clc; clear all; close all;                  % reset the Matlab workspace

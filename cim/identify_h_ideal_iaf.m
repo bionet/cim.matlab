@@ -19,7 +19,7 @@
 %
 %   Revision Author:      Chung-Heng Yeh
 %
-%   Copyright 2010-2012   Yevgeniy B. Slutskiy and Chung-Heng Yeh
+%   Copyright 2012-2014   Yevgeniy B. Slutskiy and Chung-Heng Yeh
 
 function [Ph windows varargout] = ...
          identify_h_ideal_iaf(dt, t_Ph, t, u, W, b, d, ... 
