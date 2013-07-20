@@ -6,14 +6,14 @@ Channel Identification Machines Toolbox
 Package Description
 -------------------
 
-The Channel Identification Machines (CIMs) Toolbox provides a set of 
-algorithms for the functional identification of spiking neural circuits, 
-as well as a step-by-step demonstration of the accompanying source code.
-The neural circuits considered here consist of a linear dendritic 
-processing filter in cascade with a spiking neuron model.
-
-The CIM algorithms identify the dendritic processing filter and reconstruct
-its kernel with arbitrary precision.
+The Channel Identification Machines (CIMs) Toolbox provides a set of algorithms
+for the functional identification of a channel in a system consisting of a
+communication channel in cascade with an asynchronous sampler, as well as
+step-by-step demonstrations of the accompanying source code. The channel
+considered here is modeled as a multidimensional filter, while models of
+asynchronous sampler are taken from neuroscience and communications and
+includes integrate-and-fire (IAF) neurons, asynchronous delta-sigma modulators
+(ASDM), and general oscillators in cascade with zero-crossing detectors.
 
 Future releases of this package may be obtained from the Bionet
 Group's online code repository [1]_.
@@ -27,7 +27,7 @@ See the included AUTHORS file for more information and acknowledgements.
 
 License
 -------
-This software is licensed under the 
+This software is licensed under the
 `BSD License <http://www.opensource.org/licenses/bsd-license.php>`_.
 See the included LICENSE file for more information.
 
@@ -36,7 +36,7 @@ Contact Information
 
 Please direct all questions and comments pertaining to this software to
 
-* `Yevgeniy B. Slutskiy <ys2146@columbia.edu>`_
+* `Yevgeniy B. Slutskiy <http://www.ee.columbia.edu/~yevgeniy/>`_ [`email <ys2146@columbia.edu>`_]
 
 References
 ----------
