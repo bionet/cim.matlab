@@ -36,7 +36,7 @@ Contact Information
 
 Please direct all questions and comments pertaining to this software to
 
-* `Yevgeniy B. Slutskiy <http://www.ee.columbia.edu/~yevgeniy/>`_ [`email <ys2146@columbia.edu>`_]
+* `Chung-Heng Yeh <http://www.bionet.columbia.edu/people>`_ [`email <chyeh@ee.columbia.edu>`_]
 
 References
 ----------
