@@ -36,7 +36,7 @@ Contact Information
 
 Please direct all questions and comments pertaining to this software to
 
-* `Chung-Heng Yeh <http://www.bionet.columbia.edu/people>`_ [`email <chyeh@ee.columbia.edu>`_]
+* `Chung-Heng Yeh <http://www.bionet.ee.columbia.edu/people>`_ [`email <chyeh@ee.columbia.edu>`_]
 
 References
 ----------
