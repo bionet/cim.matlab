@@ -21,9 +21,16 @@ Group's online code repository [1]_.
 Authors & Acknowledgments
 -------------------------
 
-This software was written by members of the Bionet Group [2]_ at Columbia
-University.
-See the included AUTHORS file for more information and acknowledgements.
+This software in this toolbox was written and developed by the following
+alumni of the Bionet Group [2]_ at Electrical Engineering Department of
+Columbia University under the supervision of Prof.
+`Aurel A. Lazar <http://www.ee.columbia.edu/~aurel/>`_:
+
+* Yevgeniy B. Slutskiy <http://www.ee.columbia.edu/~yevgeniy/>`_ [`email <plunzher@gmail.com>`_]
+
+The software in this toolbox was revised and packaged by
+
+* `Chung-Heng Yeh <http://www.bionet.ee.columbia.edu/people>`_ [`email <chyeh@ee.columbia.edu>`_]
 
 License
 -------
