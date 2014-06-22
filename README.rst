@@ -41,9 +41,7 @@ See the included LICENSE file for more information.
 Contact Information
 -------------------
 
-Please direct all questions and comments pertaining to this software to
-
-* `Chung-Heng Yeh <http://www.bionet.ee.columbia.edu/people>`_ [`email <chyeh@ee.columbia.edu>`_]
+Please direct all questions and comments pertaining to this toolbox to this `email <chyeh@ee.columbia.edu>`_.
 
 References
 ----------
