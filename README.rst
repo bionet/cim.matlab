@@ -26,7 +26,7 @@ alumni of the Bionet Group [2]_ at Electrical Engineering Department of
 Columbia University under the supervision of Prof.
 `Aurel A. Lazar <http://www.ee.columbia.edu/~aurel/>`_:
 
-* Yevgeniy B. Slutskiy <http://www.ee.columbia.edu/~yevgeniy/>`_ [`email <plunzher@gmail.com>`_]
+* `Yevgeniy B. Slutskiy <http://www.ee.columbia.edu/~yevgeniy/>`_ [`email <plunzher@gmail.com>`_]
 
 The software in this toolbox was revised and packaged by
 
